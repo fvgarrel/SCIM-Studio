@@ -75,25 +75,28 @@
             </StackPanel>
 
             <DockPanel Margin="24,20,24,16" IsVisible="{Binding Selected, Converter={x:Static ObjectConverters.IsNotNull}}">
-                <StackPanel DockPanel.Dock="Top" Spacing="8" DataContext="{Binding Selected}" x:DataType="vm:ExchangeItemViewModel">
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Border Classes="method">
-                            <TextBlock Text="{Binding Method}" />
+                <Panel DockPanel.Dock="Top" DataContext="{Binding Selected}">
+                    <StackPanel Spacing="8" x:DataType="vm:ExchangeItemViewModel">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Border Classes="method">
+                                <TextBlock Text="{Binding Method}" />
+                            </Border>
+                            <TextBlock Classes="mono strong" Text="{Binding StatusLine}" VerticalAlignment="Center"
+                                       Classes.ok="{Binding IsSuccess}" Classes.warn="{Binding IsClientError}"
+                                       Classes.bad="{Binding IsServerError}" />
+                            <TextBlock Classes="faint small" Text="{Binding Duration}" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <SelectableTextBlock Classes="mono" Text="{Binding Url}" TextWrapping="Wrap" />
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Classes="faint small" Text="{Binding Time}" />
+                            <TextBlock Classes="faint small" Text="·" />
+                            <TextBlock Classes="faint small" Text="{Binding Origin}" />
+                        </StackPanel>
+                        <Border Classes="banner" IsVisible="{Binding Failure, Converter={x:Static ObjectConverters.IsNotNull}}">
+                            <SelectableTextBlock Text="{Binding Failure}" />
                         </Border>
-                        <TextBlock Classes="mono strong" Text="{Binding StatusLine}" VerticalAlignment="Center"
-                                   Classes.ok="{Binding IsSuccess}" Classes.warn="{Binding IsClientError}" Classes.bad="{Binding IsServerError}" />
-                        <TextBlock Classes="faint small" Text="{Binding Duration}" VerticalAlignment="Center" />
                     </StackPanel>
-                    <SelectableTextBlock Classes="mono" Text="{Binding Url}" TextWrapping="Wrap" />
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <TextBlock Classes="faint small" Text="{Binding Time}" />
-                        <TextBlock Classes="faint small" Text="·" />
-                        <TextBlock Classes="faint small" Text="{Binding Origin}" />
-                    </StackPanel>
-                    <Border Classes="banner" IsVisible="{Binding Failure, Converter={x:Static ObjectConverters.IsNotNull}}">
-                        <SelectableTextBlock Text="{Binding Failure}" />
-                    </Border>
-                </StackPanel>
+                </Panel>
 
                 <WrapPanel DockPanel.Dock="Top" Margin="0,12,0,4" ItemSpacing="8" LineSpacing="8">
                     <Button Command="{Binding CopyCurlCommand}">

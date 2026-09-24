@@ -16,23 +16,24 @@
                     <TextBlock Classes="title" Text="SCIM Studio" />
                     <TextBlock Classes="muted" Text="{l:Tr connect.tagline}" />
                 </StackPanel>
-                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center"
-                            DataContext="{Binding Preferences}" x:DataType="vm:SettingsViewModel">
-                    <ListBox Classes="segmented" ItemsSource="{Binding Languages}" SelectedItem="{Binding Language}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate x:DataType="vm:ChoiceViewModel">
-                                <TextBlock Text="{Binding Label}" FontSize="12" />
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <ListBox Classes="segmented" ItemsSource="{Binding Themes}" SelectedItem="{Binding Theme}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate x:DataType="vm:ChoiceViewModel">
-                                <TextBlock Text="{Binding Label}" FontSize="12" />
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </StackPanel>
+                <Panel Grid.Column="2" VerticalAlignment="Center" DataContext="{Binding Preferences}">
+                    <StackPanel Orientation="Horizontal" Spacing="8" x:DataType="vm:SettingsViewModel">
+                        <ListBox Classes="segmented" ItemsSource="{Binding Languages}" SelectedItem="{Binding Language}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ChoiceViewModel">
+                                    <TextBlock Text="{Binding Label}" FontSize="12" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <ListBox Classes="segmented" ItemsSource="{Binding Themes}" SelectedItem="{Binding Theme}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ChoiceViewModel">
+                                    <TextBlock Text="{Binding Label}" FontSize="12" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </Panel>
             </Grid>
 
             <Grid Grid.Row="1" ColumnDefinitions="300,*" ColumnSpacing="20" Margin="0,28,0,0">
@@ -188,43 +189,46 @@
 
                                 <!-- What the last test found. -->
                                 <Border Classes="well" IsVisible="{Binding Probe, Converter={x:Static ObjectConverters.IsNotNull}}">
-                                    <StackPanel Spacing="10" DataContext="{Binding Probe}" x:DataType="vm:ProbeResultViewModel">
-                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                                            <Panel VerticalAlignment="Top" Margin="0,1,0,0">
-                                                <c:Icon Data="{x:Static c:Icons.Check}" Foreground="{DynamicResource SuccessBrush}"
-                                                        IsVisible="{Binding Succeeded}" />
-                                                <c:Icon Data="{x:Static c:Icons.Alert}" Foreground="{DynamicResource WarningBrush}"
-                                                        IsVisible="{Binding Partial}" />
-                                                <c:Icon Data="{x:Static c:Icons.Alert}" Foreground="{DynamicResource DangerBrush}"
-                                                        IsVisible="{Binding Failed}" />
-                                            </Panel>
-                                            <StackPanel Grid.Column="1" Spacing="2">
-                                                <TextBlock Classes="strong" Text="{Binding Headline}" TextWrapping="Wrap" />
-                                                <TextBlock Classes="muted small" Text="{Binding Counts}"
-                                                           IsVisible="{Binding Counts, Converter={x:Static ObjectConverters.IsNotNull}}" />
-                                            </StackPanel>
-                                        </Grid>
-                                        <ItemsControl ItemsSource="{Binding Problems}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate x:DataType="x:String">
-                                                    <SelectableTextBlock Classes="small" Foreground="{DynamicResource DangerBrush}"
-                                                                         Text="{Binding}" TextWrapping="Wrap" Margin="26,2,0,2" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                        <ItemsControl ItemsSource="{Binding Capabilities}" Margin="26,0,0,0">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <WrapPanel ItemSpacing="6" LineSpacing="6" />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate x:DataType="vm:CapabilityViewModel">
-                                                    <c:Capability Label="{Binding Name}" Supported="{Binding Supported}" Detail="{Binding Detail}" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </StackPanel>
+                                    <Panel DataContext="{Binding Probe}">
+                                        <StackPanel Spacing="10" x:DataType="vm:ProbeResultViewModel">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Panel VerticalAlignment="Top" Margin="0,1,0,0">
+                                                    <c:Icon Data="{x:Static c:Icons.Check}" Foreground="{DynamicResource SuccessBrush}"
+                                                            IsVisible="{Binding Succeeded}" />
+                                                    <c:Icon Data="{x:Static c:Icons.Alert}" Foreground="{DynamicResource WarningBrush}"
+                                                            IsVisible="{Binding Partial}" />
+                                                    <c:Icon Data="{x:Static c:Icons.Alert}" Foreground="{DynamicResource DangerBrush}"
+                                                            IsVisible="{Binding Failed}" />
+                                                </Panel>
+                                                <StackPanel Grid.Column="1" Spacing="2">
+                                                    <TextBlock Classes="strong" Text="{Binding Headline}" TextWrapping="Wrap" />
+                                                    <TextBlock Classes="muted small" Text="{Binding Counts}"
+                                                               IsVisible="{Binding Counts, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                                </StackPanel>
+                                            </Grid>
+                                            <ItemsControl ItemsSource="{Binding Problems}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <SelectableTextBlock Classes="small" Foreground="{DynamicResource DangerBrush}"
+                                                                             Text="{Binding}" TextWrapping="Wrap" Margin="26,2,0,2" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                            <ItemsControl ItemsSource="{Binding Capabilities}" Margin="26,0,0,0">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel ItemSpacing="6" LineSpacing="6" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="vm:CapabilityViewModel">
+                                                        <c:Capability Label="{Binding Name}" Supported="{Binding Supported}"
+                                                                      Detail="{Binding Detail}" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Panel>
                                 </Border>
                             </StackPanel>
                         </StackPanel>

@@ -167,53 +167,55 @@
                     </StackPanel>
 
                     <ScrollViewer IsVisible="{Binding Selected, Converter={x:Static ObjectConverters.IsNotNull}}">
-                        <StackPanel Spacing="14" DataContext="{Binding Selected}" x:DataType="vm:CheckItemViewModel">
-                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                                <c:StatusMark Status="{Binding Status}" VerticalAlignment="Top" Margin="0,2,0,0" />
-                                <TextBlock Grid.Column="1" Classes="heading" Text="{Binding Title}" TextWrapping="Wrap" />
-                            </Grid>
-                            <WrapPanel ItemSpacing="8" LineSpacing="6">
-                                <Border Classes="badge" Classes.success="{Binding IsPassed}" Classes.warning="{Binding IsWarning}"
-                                        Classes.danger="{Binding IsFailed}">
-                                    <TextBlock Text="{Binding StatusLabel}" />
-                                </Border>
-                                <TextBlock Classes="faint small" Text="{Binding Reference}" VerticalAlignment="Center" />
-                                <TextBlock Classes="faint small" Text="{Binding Duration}" VerticalAlignment="Center" />
-                            </WrapPanel>
+                        <Panel DataContext="{Binding Selected}">
+                            <StackPanel Spacing="14" x:DataType="vm:CheckItemViewModel">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                    <c:StatusMark Status="{Binding Status}" VerticalAlignment="Top" Margin="0,2,0,0" />
+                                    <TextBlock Grid.Column="1" Classes="heading" Text="{Binding Title}" TextWrapping="Wrap" />
+                                </Grid>
+                                <WrapPanel ItemSpacing="8" LineSpacing="6">
+                                    <Border Classes="badge" Classes.success="{Binding IsPassed}" Classes.warning="{Binding IsWarning}"
+                                            Classes.danger="{Binding IsFailed}">
+                                        <TextBlock Text="{Binding StatusLabel}" />
+                                    </Border>
+                                    <TextBlock Classes="faint small" Text="{Binding Reference}" VerticalAlignment="Center" />
+                                    <TextBlock Classes="faint small" Text="{Binding Duration}" VerticalAlignment="Center" />
+                                </WrapPanel>
 
-                            <ItemsControl ItemsSource="{Binding Notes}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="x:String">
-                                        <Border Classes="well" Padding="10,8" Margin="0,0,0,6">
-                                            <SelectableTextBlock Text="{Binding}" TextWrapping="Wrap" />
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                                <ItemsControl ItemsSource="{Binding Notes}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <Border Classes="well" Padding="10,8" Margin="0,0,0,6">
+                                                <SelectableTextBlock Text="{Binding}" TextWrapping="Wrap" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
 
-                            <TextBlock Classes="eyebrow" Text="{l:Tr checks.requests}"
-                                       IsVisible="{Binding Exchanges.Count, Converter={x:Static vm:Is.Positive}}" />
-                            <ItemsControl ItemsSource="{Binding Exchanges}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="http:HttpExchange">
-                                        <Button Classes="row" Padding="8,6"
-                                                Command="{Binding $parent[UserControl].((vm:ChecksViewModel)DataContext).ShowExchangeCommand}"
-                                                CommandParameter="{Binding}" ToolTip.Tip="{l:Tr checks.openInLog}">
-                                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
-                                                <Border Classes="method">
-                                                    <TextBlock Text="{Binding Method}" />
-                                                </Border>
-                                                <TextBlock Grid.Column="1" Classes="mono" Text="{Binding Url.PathAndQuery}"
-                                                           TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                                                <TextBlock Grid.Column="2" Classes="mono strong" Classes.ok="{Binding IsSuccess}"
-                                                           Classes.bad="{Binding !IsSuccess}" Text="{Binding StatusCode, FallbackValue='—'}"
-                                                           VerticalAlignment="Center" />
-                                            </Grid>
-                                        </Button>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
+                                <TextBlock Classes="eyebrow" Text="{l:Tr checks.requests}"
+                                           IsVisible="{Binding Exchanges.Count, Converter={x:Static vm:Is.Positive}}" />
+                                <ItemsControl ItemsSource="{Binding Exchanges}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="http:HttpExchange">
+                                            <Button Classes="row" Padding="8,6"
+                                                    Command="{Binding $parent[UserControl].((vm:ChecksViewModel)DataContext).ShowExchangeCommand}"
+                                                    CommandParameter="{Binding}" ToolTip.Tip="{l:Tr checks.openInLog}">
+                                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                                    <Border Classes="method">
+                                                        <TextBlock Text="{Binding Method}" />
+                                                    </Border>
+                                                    <TextBlock Grid.Column="1" Classes="mono" Text="{Binding Url.PathAndQuery}"
+                                                               TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                                    <TextBlock Grid.Column="2" Classes="mono strong" Classes.ok="{Binding IsSuccess}"
+                                                               Classes.bad="{Binding !IsSuccess}" Text="{Binding StatusCode, FallbackValue='—'}"
+                                                               VerticalAlignment="Center" />
+                                                </Grid>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Panel>
                     </ScrollViewer>
                 </Panel>
             </Border>
