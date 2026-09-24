@@ -1,6 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using ScimStudio.App.Services;
-using ScimStudio.Core.Scim;
 
 namespace ScimStudio.App.ViewModels;
 
@@ -25,8 +24,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase {
 
     public Dialogs Dialogs => _services.Dialogs;
 
-    private void Open(Session session, ProbeReport? probe) {
-        Page = new ShellViewModel(_services, session, probe, Close);
+    private void Open(Session session) {
+        Page = new ShellViewModel(_services, session, Close);
     }
 
     private void Close() {

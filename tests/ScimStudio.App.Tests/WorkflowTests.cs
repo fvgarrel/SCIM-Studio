@@ -177,7 +177,7 @@ public sealed class WorkflowTests {
             var profile = new ConnectionProfile { Name = "Demo", BaseUrl = server.BaseUrl.AbsoluteUri, Dialect = dialect };
             var session = new Session(profile, server.Token, services.Log, isDemo: true);
             var client = new ScimClient(Session.Connection(profile, server.Token), new Core.Http.ExchangeLog());
-            return new World(server, services, new ShellViewModel(services, session, null, () => { }), client);
+            return new World(server, services, new ShellViewModel(services, session, () => { }), client);
         }
 
         public async Task<ScimUser> CreateUserAsync(string userName) {

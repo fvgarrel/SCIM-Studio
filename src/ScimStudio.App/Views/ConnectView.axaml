@@ -16,23 +16,24 @@
                     <TextBlock Classes="title" Text="SCIM Studio" />
                     <TextBlock Classes="muted" Text="{l:Tr connect.tagline}" />
                 </StackPanel>
-                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center"
-                            DataContext="{Binding Preferences}" x:DataType="vm:SettingsViewModel">
-                    <ListBox Classes="segmented" ItemsSource="{Binding Languages}" SelectedItem="{Binding Language}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate x:DataType="vm:ChoiceViewModel">
-                                <TextBlock Text="{Binding Label}" FontSize="12" />
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <ListBox Classes="segmented" ItemsSource="{Binding Themes}" SelectedItem="{Binding Theme}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate x:DataType="vm:ChoiceViewModel">
-                                <TextBlock Text="{Binding Label}" FontSize="12" />
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </StackPanel>
+                <Panel Grid.Column="2" VerticalAlignment="Center" DataContext="{Binding Preferences}">
+                    <StackPanel Orientation="Horizontal" Spacing="8" x:DataType="vm:SettingsViewModel">
+                        <ListBox Classes="segmented" ItemsSource="{Binding Languages}" SelectedItem="{Binding Language}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ChoiceViewModel">
+                                    <TextBlock Text="{Binding Label}" FontSize="12" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <ListBox Classes="segmented" ItemsSource="{Binding Themes}" SelectedItem="{Binding Theme}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ChoiceViewModel">
+                                    <TextBlock Text="{Binding Label}" FontSize="12" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </Panel>
             </Grid>
 
             <Grid Grid.Row="1" ColumnDefinitions="300,*" ColumnSpacing="20" Margin="0,28,0,0">
@@ -111,10 +112,10 @@
 
                                 <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="16">
                                     <TextBlock Classes="label" Text="{l:Tr connect.name}" VerticalAlignment="Center" Margin="0" />
-                                    <TextBox Grid.Column="1" Text="{Binding Selected.Name, FallbackValue=''}"
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Selected.Name, FallbackValue=''}"
                                              PlaceholderText="{l:Tr connect.namePlaceholder}" />
 
-                                    <TextBlock Grid.Row="1" Classes="label" Text="{l:Tr connect.baseUrl}" Margin="0,9,0,0" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Classes="label" Text="{l:Tr connect.baseUrl}" Margin="0,9,0,0" />
                                     <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6">
                                         <TextBox Classes="mono" Text="{Binding Selected.BaseUrl, FallbackValue=''}"
                                                  PlaceholderText="https://example.com/scim/v2" />
@@ -125,7 +126,7 @@
                                         <TextBlock Classes="faint small" TextWrapping="Wrap" Text="{l:Tr connect.urlHint}" />
                                     </StackPanel>
 
-                                    <TextBlock Grid.Row="2" Classes="label" Text="{l:Tr connect.token}" Margin="0,9,0,0" />
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Classes="label" Text="{l:Tr connect.token}" Margin="0,9,0,0" />
                                     <StackPanel Grid.Row="2" Grid.Column="1" Spacing="8">
                                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
                                             <TextBox Classes="mono" PasswordChar="•" RevealPassword="{Binding #Reveal.IsChecked}"
@@ -141,7 +142,7 @@
                                         </CheckBox>
                                     </StackPanel>
 
-                                    <TextBlock Grid.Row="3" Classes="label" Text="{l:Tr connect.dialect}" Margin="0,9,0,0" />
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Classes="label" Text="{l:Tr connect.dialect}" Margin="0,9,0,0" />
                                     <StackPanel Grid.Row="3" Grid.Column="1" Spacing="6">
                                         <ComboBox ItemsSource="{Binding Selected.Dialects, FallbackValue={x:Null}}"
                                                   SelectedItem="{Binding Selected.Dialect, FallbackValue={x:Null}}" MinWidth="260">
@@ -155,7 +156,7 @@
                                                    Text="{Binding Selected.Dialect.About, FallbackValue=''}" />
                                     </StackPanel>
 
-                                    <TextBlock Grid.Row="4" Classes="label" Text="{l:Tr connect.advanced}" Margin="0,9,0,0" />
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Classes="label" Text="{l:Tr connect.advanced}" Margin="0,9,0,0" />
                                     <StackPanel Grid.Row="4" Grid.Column="1" Spacing="10">
                                         <CheckBox IsChecked="{Binding Selected.AcceptInvalidCertificates, FallbackValue=False}"
                                                   Content="{l:Tr connect.acceptInvalid}" />
@@ -188,43 +189,46 @@
 
                                 <!-- What the last test found. -->
                                 <Border Classes="well" IsVisible="{Binding Probe, Converter={x:Static ObjectConverters.IsNotNull}}">
-                                    <StackPanel Spacing="10" DataContext="{Binding Probe}" x:DataType="vm:ProbeResultViewModel">
-                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                                            <Panel VerticalAlignment="Top" Margin="0,1,0,0">
-                                                <c:Icon Data="{x:Static c:Icons.Check}" Foreground="{DynamicResource SuccessBrush}"
-                                                        IsVisible="{Binding Succeeded}" />
-                                                <c:Icon Data="{x:Static c:Icons.Alert}" Foreground="{DynamicResource WarningBrush}"
-                                                        IsVisible="{Binding Partial}" />
-                                                <c:Icon Data="{x:Static c:Icons.Alert}" Foreground="{DynamicResource DangerBrush}"
-                                                        IsVisible="{Binding Failed}" />
-                                            </Panel>
-                                            <StackPanel Grid.Column="1" Spacing="2">
-                                                <TextBlock Classes="strong" Text="{Binding Headline}" TextWrapping="Wrap" />
-                                                <TextBlock Classes="muted small" Text="{Binding Counts}"
-                                                           IsVisible="{Binding Counts, Converter={x:Static ObjectConverters.IsNotNull}}" />
-                                            </StackPanel>
-                                        </Grid>
-                                        <ItemsControl ItemsSource="{Binding Problems}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate x:DataType="x:String">
-                                                    <SelectableTextBlock Classes="small" Foreground="{DynamicResource DangerBrush}"
-                                                                         Text="{Binding}" TextWrapping="Wrap" Margin="26,2,0,2" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                        <ItemsControl ItemsSource="{Binding Capabilities}" Margin="26,0,0,0">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <WrapPanel ItemSpacing="6" LineSpacing="6" />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate x:DataType="vm:CapabilityViewModel">
-                                                    <c:Capability Label="{Binding Name}" Supported="{Binding Supported}" Detail="{Binding Detail}" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </StackPanel>
+                                    <Panel DataContext="{Binding Probe}">
+                                        <StackPanel Spacing="10" x:DataType="vm:ProbeResultViewModel">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Panel VerticalAlignment="Top" Margin="0,1,0,0">
+                                                    <c:Icon Data="{x:Static c:Icons.Check}" Foreground="{DynamicResource SuccessBrush}"
+                                                            IsVisible="{Binding Succeeded}" />
+                                                    <c:Icon Data="{x:Static c:Icons.Alert}" Foreground="{DynamicResource WarningBrush}"
+                                                            IsVisible="{Binding Partial}" />
+                                                    <c:Icon Data="{x:Static c:Icons.Alert}" Foreground="{DynamicResource DangerBrush}"
+                                                            IsVisible="{Binding Failed}" />
+                                                </Panel>
+                                                <StackPanel Grid.Column="1" Spacing="2">
+                                                    <TextBlock Classes="strong" Text="{Binding Headline}" TextWrapping="Wrap" />
+                                                    <TextBlock Classes="muted small" Text="{Binding Counts}"
+                                                               IsVisible="{Binding Counts, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                                </StackPanel>
+                                            </Grid>
+                                            <ItemsControl ItemsSource="{Binding Problems}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <SelectableTextBlock Classes="small" Foreground="{DynamicResource DangerBrush}"
+                                                                             Text="{Binding}" TextWrapping="Wrap" Margin="26,2,0,2" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                            <ItemsControl ItemsSource="{Binding Capabilities}" Margin="26,0,0,0">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel ItemSpacing="6" LineSpacing="6" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="vm:CapabilityViewModel">
+                                                        <c:Capability Label="{Binding Name}" Supported="{Binding Supported}"
+                                                                      Detail="{Binding Detail}" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Panel>
                                 </Border>
                             </StackPanel>
                         </StackPanel>

@@ -22,15 +22,15 @@
                             <TextBlock Classes="label" Text="{l:Tr generator.users}" />
                             <NumericUpDown Value="{Binding Users}" Minimum="0" Maximum="10000" Increment="5" FormatString="0" />
                         </StackPanel>
-                        <StackPanel Grid.Column="1">
+                        <StackPanel Grid.Row="0" Grid.Column="1">
                             <TextBlock Classes="label" Text="{l:Tr generator.groups}" />
                             <NumericUpDown Value="{Binding Groups}" Minimum="0" Maximum="500" Increment="1" FormatString="0" />
                         </StackPanel>
-                        <StackPanel Grid.Column="2">
+                        <StackPanel Grid.Row="0" Grid.Column="2">
                             <TextBlock Classes="label" Text="{l:Tr generator.members}" />
                             <NumericUpDown Value="{Binding MembersPerGroup}" Minimum="0" Maximum="1000" Increment="1" FormatString="0" />
                         </StackPanel>
-                        <StackPanel Grid.Row="1">
+                        <StackPanel Grid.Row="1" Grid.Column="0">
                             <TextBlock Classes="label" Text="{l:Tr generator.inactive}" />
                             <NumericUpDown Value="{Binding InactivePercent}" Minimum="0" Maximum="100" Increment="5" FormatString="0" />
                         </StackPanel>

@@ -118,8 +118,9 @@
                         </ListBox>
                     </StackPanel>
 
-                    <Border Grid.Column="1" BorderBrush="{DynamicResource HairlineBrush}" BorderThickness="1,0,0,0" Padding="20,16">
-                        <StackPanel Spacing="12" DataContext="{Binding SelectedSchema}" x:DataType="vm:SchemaViewModel">
+                    <Border Grid.Column="1" BorderBrush="{DynamicResource HairlineBrush}" BorderThickness="1,0,0,0" Padding="20,16"
+                            DataContext="{Binding SelectedSchema}">
+                        <StackPanel Spacing="12" x:DataType="vm:SchemaViewModel">
                             <StackPanel Spacing="2">
                                 <TextBlock Classes="heading" Text="{Binding Name}" />
                                 <SelectableTextBlock Classes="mono faint" Text="{Binding Id}" />

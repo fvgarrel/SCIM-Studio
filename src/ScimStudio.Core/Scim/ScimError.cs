@@ -54,8 +54,7 @@ public sealed class ScimException : Exception {
     /// <summary>A failure the server answered with.</summary>
     /// <param name="error">The error as the server described it.</param>
     /// <param name="exchange">The exchange it came from, for linking to the log.</param>
-    public ScimException(ScimError error, HttpExchange? exchange) : base(error?.ToString()) {
-        ArgumentNullException.ThrowIfNull(error);
+    public ScimException(ScimError error, HttpExchange? exchange) : base((error ?? throw new ArgumentNullException(nameof(error))).ToString()) {
         Error = error;
         Exchange = exchange;
     }

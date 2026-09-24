@@ -303,7 +303,7 @@ public sealed partial class ChecksViewModel : ViewModelBase, IDisposable {
             var asJson = Path.GetExtension(file.Name).ToUpperInvariant() switch {
                 ".JSON" => true,
                 ".MD" => false,
-                _ => picked?.SelectedFileType == json,
+                _ => picked.Value.SelectedFileType == json,
             };
 
             try {

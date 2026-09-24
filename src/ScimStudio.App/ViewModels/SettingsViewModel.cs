@@ -34,10 +34,10 @@ public sealed partial class SettingsViewModel : ViewModelBase {
     public IReadOnlyList<ChoiceViewModel> Themes { get; }
 
     [ObservableProperty]
-    public partial ChoiceViewModel Language { get; set; }
+    public partial ChoiceViewModel? Language { get; set; }
 
     [ObservableProperty]
-    public partial ChoiceViewModel Theme { get; set; }
+    public partial ChoiceViewModel? Theme { get; set; }
 
     public string SettingsPath => _services.Store.Path;
 
@@ -47,7 +47,7 @@ public sealed partial class SettingsViewModel : ViewModelBase {
 
     public string Version => ScimClient.Version;
 
-    partial void OnLanguageChanged(ChoiceViewModel value) {
+    partial void OnLanguageChanged(ChoiceViewModel? value) {
         if (value?.Value is not string language) {
             return;
         }
@@ -61,7 +61,7 @@ public sealed partial class SettingsViewModel : ViewModelBase {
         _services.Save();
     }
 
-    partial void OnThemeChanged(ChoiceViewModel value) {
+    partial void OnThemeChanged(ChoiceViewModel? value) {
         if (value?.Value is not ThemeChoice theme) {
             return;
         }

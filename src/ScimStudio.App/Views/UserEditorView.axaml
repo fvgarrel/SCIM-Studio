@@ -76,7 +76,7 @@
                             <TextBlock Classes="error" Margin="0,4,0,0" Text="{l:Tr user.userNameRequired}"
                                        IsVisible="{Binding UserNameMissing}" />
                         </StackPanel>
-                        <StackPanel Grid.Column="1">
+                        <StackPanel Grid.Row="0" Grid.Column="1">
                             <TextBlock Classes="label" Text="{l:Tr user.externalId}" />
                             <TextBox Classes="mono" Text="{Binding ExternalId}" PlaceholderText="{l:Tr common.optional}">
                                 <TextBox.InnerRightContent>
@@ -88,7 +88,7 @@
                             </TextBox>
                         </StackPanel>
 
-                        <StackPanel Grid.Row="1">
+                        <StackPanel Grid.Row="1" Grid.Column="0">
                             <TextBlock Classes="label" Text="{l:Tr user.givenName}" />
                             <TextBox Text="{Binding GivenName}" />
                         </StackPanel>
@@ -97,7 +97,7 @@
                             <TextBox Text="{Binding FamilyName}" />
                         </StackPanel>
 
-                        <StackPanel Grid.Row="2">
+                        <StackPanel Grid.Row="2" Grid.Column="0">
                             <TextBlock Classes="label" Text="{l:Tr user.displayName}" />
                             <TextBox Text="{Binding DisplayName}" />
                         </StackPanel>
@@ -106,7 +106,7 @@
                             <TextBox Text="{Binding Email}" PlaceholderText="{l:Tr user.emailHint}" />
                         </StackPanel>
 
-                        <StackPanel Grid.Row="3" IsVisible="{Binding IsNew}">
+                        <StackPanel Grid.Row="3" Grid.Column="0" IsVisible="{Binding IsNew}">
                             <TextBlock Classes="label" Text="{l:Tr user.state}" />
                             <ToggleSwitch IsChecked="{Binding Active}" OnContent="{l:Tr user.active}" OffContent="{l:Tr user.inactive}" />
                         </StackPanel>
@@ -172,18 +172,18 @@
                     <TextBlock Classes="eyebrow" Text="{l:Tr common.details}" />
                     <Grid ColumnDefinitions="130,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
                         <TextBlock Classes="muted" Text="id" />
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Spacing="6">
                             <SelectableTextBlock Classes="mono" Text="{Binding Id}" VerticalAlignment="Center" />
                             <Button Classes="subtle icon" Width="24" Height="24" MinHeight="24" Command="{Binding CopyIdCommand}"
                                     ToolTip.Tip="{l:Tr common.copy}">
                                 <c:Icon Data="{x:Static c:Icons.Copy}" Width="13" Height="13" />
                             </Button>
                         </StackPanel>
-                        <TextBlock Grid.Row="1" Classes="muted" Text="{l:Tr common.created}" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Classes="muted" Text="{l:Tr common.created}" />
                         <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Created}" />
-                        <TextBlock Grid.Row="2" Classes="muted" Text="{l:Tr common.modified}" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Classes="muted" Text="{l:Tr common.modified}" />
                         <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Modified}" />
-                        <TextBlock Grid.Row="3" Classes="muted" Text="{l:Tr common.location}" />
+                        <TextBlock Grid.Row="3" Grid.Column="0" Classes="muted" Text="{l:Tr common.location}" />
                         <SelectableTextBlock Grid.Row="3" Grid.Column="1" Classes="mono" Text="{Binding Location}" TextWrapping="Wrap" />
                     </Grid>
                 </StackPanel>

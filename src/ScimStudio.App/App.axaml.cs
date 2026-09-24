@@ -10,7 +10,7 @@ using ScimStudio.App.Views;
 
 namespace ScimStudio.App;
 
-public partial class App : Application {
+public class App : Application {
     /// <summary>Where the settings are read from; tests point it somewhere of their own.</summary>
     public static string SettingsPath { get; set; } = SettingsStore.DefaultPath;
 

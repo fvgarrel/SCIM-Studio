@@ -7,7 +7,7 @@ namespace ScimStudio.App;
 
 /// <summary>Which view shows which view model. Written out rather than found by name, so trimming keeps every view that is used.</summary>
 public sealed class ViewLocator : IDataTemplate {
-    public Control? Build(object? param) {
+    public Control Build(object? param) {
         return param switch {
             ConnectViewModel => new ConnectView(),
             ShellViewModel => new ShellView(),
