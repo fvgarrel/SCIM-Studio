@@ -89,7 +89,7 @@ public sealed class ReportTests {
 
         await check.CopyCurlCommand.ExecuteAsync(null);
         var curl = await world.ClipboardAsync();
-        Assert.Equal(check.Exchanges.Count, curl.Split("\ncurl", StringSplitOptions.None).Length - 1);
+        Assert.Equal(check.Exchanges.Count, curl.Split("\ncurl").Length - 1);
         Assert.Contains($"${ShellCommand.TOKEN_VARIABLE}", curl, StringComparison.Ordinal);
 
         await check.CopyPowerShellCommand.ExecuteAsync(null);
@@ -197,7 +197,7 @@ public sealed class ReportTests {
                 services.TopLevel = window;
             }
 
-            return new World(server, services, new ShellViewModel(services, session, null, () => { }), window);
+            return new World(server, services, new ShellViewModel(services, session, () => { }), window);
         }
 
         /// <summary>A world whose checks have run once.</summary>

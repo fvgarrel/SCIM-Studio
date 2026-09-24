@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using ScimStudio.Core.Checks;
 
 namespace ScimStudio.App.Controls;
@@ -41,6 +42,6 @@ public sealed class StatusMark : Decorator {
 
         _icon.Data = data;
         _icon.Classes.Set("spin", Status == CheckStatus.Running);
-        _icon.Bind(Icon.ForegroundProperty, this.GetResourceObservable(brush));
+        _icon.Bind(TemplatedControl.ForegroundProperty, this.GetResourceObservable(brush));
     }
 }

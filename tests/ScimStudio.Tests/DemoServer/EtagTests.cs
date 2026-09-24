@@ -118,12 +118,12 @@ public sealed class EtagTests(DemoServerFixture fixture) : IClassFixture<DemoSer
         var patch = await _client.SendAsync(HttpMethod.Patch, $"Users/{id}", ifMatch, PatchOps.Replace("title", "\"Lost\""));
         var delete = await _client.SendAsync(HttpMethod.Delete, $"Users/{id}", ifMatch);
 
-        Assert.All([put, patch, delete], response => {
+        foreach (var response in new[] { put, patch, delete }) {
             Assert.Equal(HttpStatusCode.PreconditionFailed, response.Status);
             Assert.Equal("application/scim+json", response.MediaType);
             Assert.Equal("412", (string?)response.Body["status"]);
             Assert.Contains("W/\"2\"", (string?)response.Body["detail"], StringComparison.Ordinal);
-        });
+        }
         var user = await _client.GetAsync($"Users/{id}");
         Assert.Equal("Current", (string?)user.Body["title"]);
         Assert.Equal("W/\"2\"", Version(user));

@@ -149,16 +149,16 @@
                     <TextBlock Classes="eyebrow" Text="{l:Tr common.details}" />
                     <Grid ColumnDefinitions="130,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
                         <TextBlock Classes="muted" Text="id" />
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Spacing="6">
                             <SelectableTextBlock Classes="mono" Text="{Binding Id}" VerticalAlignment="Center" />
                             <Button Classes="subtle icon" Width="24" Height="24" MinHeight="24" Command="{Binding CopyIdCommand}"
                                     ToolTip.Tip="{l:Tr common.copy}">
                                 <c:Icon Data="{x:Static c:Icons.Copy}" Width="13" Height="13" />
                             </Button>
                         </StackPanel>
-                        <TextBlock Grid.Row="1" Classes="muted" Text="{l:Tr common.created}" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Classes="muted" Text="{l:Tr common.created}" />
                         <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Created}" />
-                        <TextBlock Grid.Row="2" Classes="muted" Text="{l:Tr common.modified}" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Classes="muted" Text="{l:Tr common.modified}" />
                         <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Modified}" />
                     </Grid>
                 </StackPanel>

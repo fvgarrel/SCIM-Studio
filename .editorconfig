@@ -146,3 +146,14 @@ dotnet_diagnostic.CA1716.severity = none
 # CA1822: a view model's property is read through its instance by a binding,
 # whether or not it touches the instance's state; static, XAML cannot bind it.
 dotnet_diagnostic.CA1822.severity = none
+
+# ReSharper: CommunityToolkit.Mvvm declares OnXChanged(value) for every
+# observable property, and an implementation must keep the parameter it
+# declares, whether it reads it or not.
+resharper_unused_parameter_in_partial_method_highlighting = none
+
+[src/ScimStudio.Core/Scim/**.cs]
+# ReSharper: these types hold what a service provider sends, as RFC 7643 and
+# RFC 7644 define it, not only what the app shows today.
+resharper_unused_auto_property_accessor_global_highlighting = none
+resharper_not_accessed_positional_property_global_highlighting = none

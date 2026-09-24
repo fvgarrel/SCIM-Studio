@@ -48,10 +48,10 @@
                     <TextBlock Classes="eyebrow" Text="{l:Tr settings.about}" />
                     <Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
                         <TextBlock Classes="muted" Text="{l:Tr settings.version}" />
-                        <TextBlock Grid.Column="1" Classes="mono" Text="{Binding Version}" />
-                        <TextBlock Grid.Row="1" Classes="muted" Text="{l:Tr settings.file}" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Classes="mono" Text="{Binding Version}" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Classes="muted" Text="{l:Tr settings.file}" />
                         <SelectableTextBlock Grid.Row="1" Grid.Column="1" Classes="mono" Text="{Binding SettingsPath}" TextWrapping="Wrap" />
-                        <TextBlock Grid.Row="2" Classes="muted" Text="{l:Tr settings.tokens}" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Classes="muted" Text="{l:Tr settings.tokens}" />
                         <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TokenStorage}" TextWrapping="Wrap" />
                     </Grid>
                 </StackPanel>

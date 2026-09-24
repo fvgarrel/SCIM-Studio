@@ -6,13 +6,15 @@ using ScimStudio.DemoServer;
 namespace ScimStudio.Tests.DemoServer;
 
 public sealed class UserEndpointTests(DemoServerFixture fixture) : IClassFixture<DemoServerFixture> {
+    /// <summary>Sends no token of its own, so a test can send the one it wants. Shared, as an HttpClient is meant to be.</summary>
+    private static readonly HttpClient Bare = new();
+
     private readonly DemoScimServer _server = fixture.Server;
     private readonly ScimTestClient _client = fixture.Client;
 
     [Fact]
     public async Task Request_without_a_token_is_refused_with_a_bearer_challenge() {
-        using var anonymous = new HttpClient();
-        using var response = await anonymous.GetAsync(new Uri(_server.BaseUrl + "/Users"), TestContext.Current.CancellationToken);
+        using var response = await Bare.GetAsync(new Uri(_server.BaseUrl + "/Users"), TestContext.Current.CancellationToken);
         var body = JsonNode.Parse(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken))!;
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -33,11 +35,10 @@ public sealed class UserEndpointTests(DemoServerFixture fixture) : IClassFixture
 
     [Fact]
     public async Task Bearer_scheme_is_matched_regardless_of_case() {
-        using var http = new HttpClient();
         using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_server.BaseUrl + "/ServiceProviderConfig"));
         request.Headers.TryAddWithoutValidation("Authorization", "bearer " + _server.Token);
 
-        using var response = await http.SendAsync(request, TestContext.Current.CancellationToken);
+        using var response = await Bare.SendAsync(request, TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }

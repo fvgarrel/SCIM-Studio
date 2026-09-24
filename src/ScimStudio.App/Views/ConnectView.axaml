@@ -112,10 +112,10 @@
 
                                 <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="16">
                                     <TextBlock Classes="label" Text="{l:Tr connect.name}" VerticalAlignment="Center" Margin="0" />
-                                    <TextBox Grid.Column="1" Text="{Binding Selected.Name, FallbackValue=''}"
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Selected.Name, FallbackValue=''}"
                                              PlaceholderText="{l:Tr connect.namePlaceholder}" />
 
-                                    <TextBlock Grid.Row="1" Classes="label" Text="{l:Tr connect.baseUrl}" Margin="0,9,0,0" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Classes="label" Text="{l:Tr connect.baseUrl}" Margin="0,9,0,0" />
                                     <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6">
                                         <TextBox Classes="mono" Text="{Binding Selected.BaseUrl, FallbackValue=''}"
                                                  PlaceholderText="https://example.com/scim/v2" />
@@ -126,7 +126,7 @@
                                         <TextBlock Classes="faint small" TextWrapping="Wrap" Text="{l:Tr connect.urlHint}" />
                                     </StackPanel>
 
-                                    <TextBlock Grid.Row="2" Classes="label" Text="{l:Tr connect.token}" Margin="0,9,0,0" />
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Classes="label" Text="{l:Tr connect.token}" Margin="0,9,0,0" />
                                     <StackPanel Grid.Row="2" Grid.Column="1" Spacing="8">
                                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
                                             <TextBox Classes="mono" PasswordChar="•" RevealPassword="{Binding #Reveal.IsChecked}"
@@ -142,7 +142,7 @@
                                         </CheckBox>
                                     </StackPanel>
 
-                                    <TextBlock Grid.Row="3" Classes="label" Text="{l:Tr connect.dialect}" Margin="0,9,0,0" />
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Classes="label" Text="{l:Tr connect.dialect}" Margin="0,9,0,0" />
                                     <StackPanel Grid.Row="3" Grid.Column="1" Spacing="6">
                                         <ComboBox ItemsSource="{Binding Selected.Dialects, FallbackValue={x:Null}}"
                                                   SelectedItem="{Binding Selected.Dialect, FallbackValue={x:Null}}" MinWidth="260">
@@ -156,7 +156,7 @@
                                                    Text="{Binding Selected.Dialect.About, FallbackValue=''}" />
                                     </StackPanel>
 
-                                    <TextBlock Grid.Row="4" Classes="label" Text="{l:Tr connect.advanced}" Margin="0,9,0,0" />
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Classes="label" Text="{l:Tr connect.advanced}" Margin="0,9,0,0" />
                                     <StackPanel Grid.Row="4" Grid.Column="1" Spacing="10">
                                         <CheckBox IsChecked="{Binding Selected.AcceptInvalidCertificates, FallbackValue=False}"
                                                   Content="{l:Tr connect.acceptInvalid}" />

@@ -172,9 +172,9 @@ public sealed class CapabilityViewModel(string name, bool supported, string? det
 /// <summary>The start page: the profiles, the one being edited, and the ways in - a server of one's own, or the demo.</summary>
 public sealed partial class ConnectViewModel : ViewModelBase {
     private readonly AppServices _services;
-    private readonly Action<Session, ProbeReport?> _open;
+    private readonly Action<Session> _open;
 
-    public ConnectViewModel(AppServices services, Action<Session, ProbeReport?> open) {
+    public ConnectViewModel(AppServices services, Action<Session> open) {
         ArgumentNullException.ThrowIfNull(services);
 
         _services = services;
@@ -311,7 +311,7 @@ public sealed partial class ConnectViewModel : ViewModelBase {
 
             session.Configuration = report.Configuration;
             Probe = null;
-            _open(session, report);
+            _open(session);
         } finally {
             IsBusy = false;
         }

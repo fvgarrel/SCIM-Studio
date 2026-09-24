@@ -46,7 +46,7 @@ public sealed class ScreenshotTests {
         var profile = new ConnectionProfile { Name = "Demo server", BaseUrl = server.BaseUrl.AbsoluteUri };
         var session = new Session(profile, server.Token, services.Log, isDemo: true);
         session.Configuration = await session.Client.GetServiceProviderConfigAsync();
-        var shell = new ShellViewModel(services, session, null, () => { });
+        var shell = new ShellViewModel(services, session, () => { });
         main.Page = shell;
 
         await Settle(() => shell.Users.Items.Count > 0);

@@ -59,8 +59,7 @@ public sealed class CheckStoppedException : Exception {
     /// <summary>A verdict with the note that explains it.</summary>
     /// <param name="status">Failed, unsupported or skipped.</param>
     /// <param name="note">Why.</param>
-    public CheckStoppedException(CheckStatus status, Message note) : base(note?.Key) {
-        ArgumentNullException.ThrowIfNull(note);
+    public CheckStoppedException(CheckStatus status, Message note) : base((note ?? throw new ArgumentNullException(nameof(note))).Key) {
         Status = status;
         Note = note;
     }

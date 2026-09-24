@@ -61,7 +61,7 @@ public sealed class ScimClient : IDisposable {
     public ScimClient(ScimConnection connection, IExchangeSink sink) : this(connection, sink, Transport(connection)) {
     }
 
-    /// <summary>A client over a transport of the caller's, for tests that stand in for a server.</summary>
+    /// <summary>A client over transport of the caller's, for tests that stand in for a server.</summary>
     /// <param name="connection">Where the server is, and the token.</param>
     /// <param name="sink">Where every exchange is recorded.</param>
     /// <param name="transport">What sends the requests.</param>

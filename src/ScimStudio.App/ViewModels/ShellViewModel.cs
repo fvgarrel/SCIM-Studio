@@ -5,7 +5,6 @@ using ScimStudio.App.Controls;
 using ScimStudio.App.Services;
 using ScimStudio.Core.Dialects;
 using ScimStudio.Core.Http;
-using ScimStudio.Core.Scim;
 
 namespace ScimStudio.App.ViewModels;
 
@@ -38,16 +37,14 @@ public sealed partial class ShellViewModel : ViewModelBase, IDisposable {
     /// <summary>Opens a session's pages.</summary>
     /// <param name="services">What the interface shares.</param>
     /// <param name="session">The session.</param>
-    /// <param name="probe">What the connection test found.</param>
     /// <param name="close">Returns to the start page.</param>
-    public ShellViewModel(AppServices services, Session session, ProbeReport? probe, Action close) {
+    public ShellViewModel(AppServices services, Session session, Action close) {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(session);
 
         _services = services;
         _close = close;
         Session = session;
-        Probe = probe;
 
         Log = new LogViewModel(services, session);
         Users = new UsersViewModel(services, session, this);
@@ -76,8 +73,6 @@ public sealed partial class ShellViewModel : ViewModelBase, IDisposable {
     }
 
     public Session Session { get; }
-
-    public ProbeReport? Probe { get; }
 
     public IReadOnlyList<NavItemViewModel> Navigation { get; }
 

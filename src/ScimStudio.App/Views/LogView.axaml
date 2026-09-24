@@ -48,12 +48,13 @@
                                     <Border Classes="method" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding Method}" />
                                     </Border>
-                                    <TextBlock Grid.Column="1" Classes="mono" Text="{Binding Path}" TextTrimming="CharacterEllipsis"
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Classes="mono" Text="{Binding Path}" TextTrimming="CharacterEllipsis"
                                                VerticalAlignment="Center" />
-                                    <TextBlock Grid.Column="2" Classes="mono strong" Text="{Binding Status}" VerticalAlignment="Center"
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Classes="mono strong" Text="{Binding Status}" VerticalAlignment="Center"
                                                Classes.ok="{Binding IsSuccess}" Classes.warn="{Binding IsClientError}"
                                                Classes.bad="{Binding IsServerError}" />
-                                    <TextBlock Grid.Row="1" Classes="faint mono" FontSize="10" Text="{Binding Time}" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Classes="faint mono" FontSize="10" Text="{Binding Time}"
+                                               VerticalAlignment="Center" />
                                     <TextBlock Grid.Row="1" Grid.Column="1" Classes="faint small" Text="{Binding Origin}"
                                                TextTrimming="CharacterEllipsis" />
                                     <TextBlock Grid.Row="1" Grid.Column="2" Classes="faint small" Text="{Binding Duration}"
