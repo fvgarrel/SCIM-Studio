@@ -1,0 +1,222 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ScimStudio.App.ViewModels"
+             xmlns:http="using:ScimStudio.Core.Http"
+             xmlns:c="using:ScimStudio.App.Controls"
+             xmlns:l="using:ScimStudio.App.Localization"
+             x:Class="ScimStudio.App.Views.ChecksView"
+             x:DataType="vm:ChecksViewModel">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <Grid Margin="28,24,28,14" ColumnDefinitions="*,Auto" ColumnSpacing="16">
+            <StackPanel Spacing="4">
+                <TextBlock Classes="title" Text="{l:Tr checks.title}" />
+                <TextBlock Classes="muted" TextWrapping="Wrap" MaxWidth="760" HorizontalAlignment="Left" Text="{Binding About}" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Top">
+                <Button Command="{Binding CancelCommand}" IsVisible="{Binding IsRunning}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <c:Icon Data="{x:Static c:Icons.Stop}" Width="14" Height="14" />
+                        <TextBlock Text="{l:Tr common.cancel}" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding ExportCommand}" ToolTip.Tip="{l:Tr checks.exportHint}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <c:Icon Data="{x:Static c:Icons.Download}" Width="14" Height="14" />
+                        <TextBlock Text="{l:Tr checks.export}" />
+                    </StackPanel>
+                </Button>
+                <Button Classes="primary" Command="{Binding RunCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <c:Icon Data="{x:Static c:Icons.Play}" Width="14" Height="14" />
+                        <TextBlock Text="{l:Tr checks.run}" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="1" Classes="card" Margin="28,0,28,14" Padding="16,14" IsVisible="{Binding HasRun}">
+            <StackPanel Spacing="12">
+                <ProgressBar Value="{Binding Progress}" Maximum="1" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <WrapPanel ItemSpacing="10" LineSpacing="8" VerticalAlignment="Center">
+                        <Border Classes="badge success">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <c:Icon Data="{x:Static c:Icons.Check}" Width="12" Height="12" Thickness="2.6" />
+                                <TextBlock Text="{Binding Passed}" />
+                                <TextBlock Text="{l:Tr summary.passed}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Classes="badge warning">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <TextBlock Text="{Binding Warnings}" />
+                                <TextBlock Text="{l:Tr summary.warnings}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Classes="badge danger">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <TextBlock Text="{Binding Failed}" />
+                                <TextBlock Text="{l:Tr summary.failed}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Classes="badge">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <c:Icon Data="{x:Static c:Icons.Ban}" Width="12" Height="12" Thickness="2.4" />
+                                <TextBlock Text="{Binding Unsupported}" />
+                                <TextBlock Text="{l:Tr summary.unsupported}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Classes="badge">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <TextBlock Text="{Binding Skipped}" />
+                                <TextBlock Text="{l:Tr summary.skipped}" />
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Classes="faint small" VerticalAlignment="Center" Text="{Binding Elapsed}" />
+                    </WrapPanel>
+                    <ToggleButton Grid.Column="1" Classes="subtle" MinHeight="34" VerticalAlignment="Center" IsChecked="{Binding OnlyProblems}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <c:Icon Data="{x:Static c:Icons.Filter}" Width="14" Height="14" />
+                            <TextBlock Text="{l:Tr checks.onlyProblems}" />
+                        </StackPanel>
+                    </ToggleButton>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,440" ColumnSpacing="16" Margin="28,0,28,24">
+            <Border Classes="card" Padding="6">
+                <Panel>
+                    <TextBlock Classes="muted" Margin="24,40" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"
+                               IsVisible="{Binding NothingShown}" Text="{l:Tr checks.noProblems}" />
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding Categories}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:CheckCategoryViewModel">
+                                    <StackPanel Margin="4,8,4,4" IsVisible="{Binding IsShown}">
+                                        <TextBlock Classes="eyebrow" Text="{Binding Title}" Margin="10,2,0,6" />
+                                        <ItemsControl ItemsSource="{Binding Items}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:CheckItemViewModel">
+                                                    <Button Classes="row" Classes.selected="{Binding IsSelected}" IsVisible="{Binding IsShown}"
+                                                            Command="{Binding $parent[UserControl].((vm:ChecksViewModel)DataContext).SelectCommand}"
+                                                            CommandParameter="{Binding}">
+                                                        <Button.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem Header="{l:Tr checks.copyResult}" Command="{Binding CopyResultCommand}"
+                                                                          IsEnabled="{Binding IsDone}">
+                                                                    <MenuItem.Icon>
+                                                                        <c:Icon Data="{x:Static c:Icons.Copy}" Width="14" Height="14" />
+                                                                    </MenuItem.Icon>
+                                                                </MenuItem>
+                                                                <MenuItem Header="{l:Tr checks.copyJson}" Command="{Binding CopyJsonCommand}"
+                                                                          IsEnabled="{Binding IsDone}">
+                                                                    <MenuItem.Icon>
+                                                                        <c:Icon Data="{x:Static c:Icons.Braces}" Width="14" Height="14" />
+                                                                    </MenuItem.Icon>
+                                                                </MenuItem>
+                                                                <Separator />
+                                                                <MenuItem Header="{l:Tr checks.copyCurl}" Command="{Binding CopyCurlCommand}"
+                                                                          IsEnabled="{Binding HasExchanges}">
+                                                                    <MenuItem.Icon>
+                                                                        <c:Icon Data="{x:Static c:Icons.Terminal}" Width="14" Height="14" />
+                                                                    </MenuItem.Icon>
+                                                                </MenuItem>
+                                                                <MenuItem Header="{l:Tr checks.copyPowerShell}"
+                                                                          Command="{Binding CopyPowerShellCommand}"
+                                                                          IsEnabled="{Binding HasExchanges}">
+                                                                    <MenuItem.Icon>
+                                                                        <c:Icon Data="{x:Static c:Icons.Terminal}" Width="14" Height="14" />
+                                                                    </MenuItem.Icon>
+                                                                </MenuItem>
+                                                            </ContextMenu>
+                                                        </Button.ContextMenu>
+                                                        <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                                                            <c:StatusMark Status="{Binding Status}" VerticalAlignment="Top" Margin="0,1,0,0" />
+                                                            <StackPanel Grid.Column="1" Spacing="1">
+                                                                <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                                                                <TextBlock Classes="faint small" Text="{Binding FirstNote}"
+                                                                           TextTrimming="CharacterEllipsis" IsVisible="{Binding HasNotes}" />
+                                                            </StackPanel>
+                                                            <TextBlock Grid.Column="2" Classes="faint small" Text="{Binding Reference}"
+                                                                       VerticalAlignment="Top" Margin="0,1,0,0" />
+                                                            <TextBlock Grid.Column="3" Classes="faint small" Text="{Binding Duration}"
+                                                                       MinWidth="52" TextAlignment="Right" VerticalAlignment="Top"
+                                                                       Margin="0,1,0,0" />
+                                                        </Grid>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Panel>
+            </Border>
+
+            <Border Grid.Column="1" Classes="card">
+                <Panel>
+                    <StackPanel IsVisible="{Binding Selected, Converter={x:Static ObjectConverters.IsNull}}" Spacing="8"
+                                VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <c:Icon Data="{x:Static c:Icons.ShieldCheck}" Width="32" Height="32" Foreground="{DynamicResource FaintTextBrush}"
+                                HorizontalAlignment="Center" />
+                        <TextBlock Classes="muted" Text="{l:Tr checks.selectHint}" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="300" />
+                    </StackPanel>
+
+                    <ScrollViewer IsVisible="{Binding Selected, Converter={x:Static ObjectConverters.IsNotNull}}">
+                        <StackPanel Spacing="14" DataContext="{Binding Selected}" x:DataType="vm:CheckItemViewModel">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                <c:StatusMark Status="{Binding Status}" VerticalAlignment="Top" Margin="0,2,0,0" />
+                                <TextBlock Grid.Column="1" Classes="heading" Text="{Binding Title}" TextWrapping="Wrap" />
+                            </Grid>
+                            <WrapPanel ItemSpacing="8" LineSpacing="6">
+                                <Border Classes="badge" Classes.success="{Binding IsPassed}" Classes.warning="{Binding IsWarning}"
+                                        Classes.danger="{Binding IsFailed}">
+                                    <TextBlock Text="{Binding StatusLabel}" />
+                                </Border>
+                                <TextBlock Classes="faint small" Text="{Binding Reference}" VerticalAlignment="Center" />
+                                <TextBlock Classes="faint small" Text="{Binding Duration}" VerticalAlignment="Center" />
+                            </WrapPanel>
+
+                            <ItemsControl ItemsSource="{Binding Notes}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <Border Classes="well" Padding="10,8" Margin="0,0,0,6">
+                                            <SelectableTextBlock Text="{Binding}" TextWrapping="Wrap" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <TextBlock Classes="eyebrow" Text="{l:Tr checks.requests}"
+                                       IsVisible="{Binding Exchanges.Count, Converter={x:Static vm:Is.Positive}}" />
+                            <ItemsControl ItemsSource="{Binding Exchanges}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="http:HttpExchange">
+                                        <Button Classes="row" Padding="8,6"
+                                                Command="{Binding $parent[UserControl].((vm:ChecksViewModel)DataContext).ShowExchangeCommand}"
+                                                CommandParameter="{Binding}" ToolTip.Tip="{l:Tr checks.openInLog}">
+                                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                                <Border Classes="method">
+                                                    <TextBlock Text="{Binding Method}" />
+                                                </Border>
+                                                <TextBlock Grid.Column="1" Classes="mono" Text="{Binding Url.PathAndQuery}"
+                                                           TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="2" Classes="mono strong" Classes.ok="{Binding IsSuccess}"
+                                                           Classes.bad="{Binding !IsSuccess}" Text="{Binding StatusCode, FallbackValue='—'}"
+                                                           VerticalAlignment="Center" />
+                                            </Grid>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Panel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

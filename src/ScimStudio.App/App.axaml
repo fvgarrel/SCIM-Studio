@@ -1,0 +1,48 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:app="using:ScimStudio.App"
+             xmlns:c="using:ScimStudio.App.Controls"
+             x:Class="ScimStudio.App.App"
+             Name="SCIM Studio"
+             RequestedThemeVariant="Default">
+
+    <Application.DataTemplates>
+        <app:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://ScimStudio/Styles/Tokens.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <ControlTheme x:Key="{x:Type c:Icon}" TargetType="c:Icon">
+                <Setter Property="Width" Value="16" />
+                <Setter Property="Height" Value="16" />
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Viewbox Stretch="Uniform">
+                            <Path Width="24" Height="24"
+                                  Data="{TemplateBinding Data}"
+                                  Stroke="{TemplateBinding Foreground}"
+                                  StrokeThickness="{TemplateBinding Thickness}"
+                                  StrokeLineCap="Round"
+                                  StrokeJoin="Round" />
+                        </Viewbox>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme>
+            <FluentTheme.Palettes>
+                <ColorPaletteResources x:Key="Light" Accent="#3563E9" ErrorText="#C93434" />
+                <ColorPaletteResources x:Key="Dark" Accent="#5479F7" ErrorText="#F07474" />
+            </FluentTheme.Palettes>
+        </FluentTheme>
+        <StyleInclude Source="avares://ScimStudio/Styles/Controls.axaml" />
+    </Application.Styles>
+</Application>

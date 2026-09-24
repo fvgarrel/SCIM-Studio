@@ -1,0 +1,110 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ScimStudio.App.ViewModels"
+             xmlns:c="using:ScimStudio.App.Controls"
+             xmlns:l="using:ScimStudio.App.Localization"
+             x:Class="ScimStudio.App.Views.UsersView"
+             x:DataType="vm:UsersViewModel">
+
+    <Grid ColumnDefinitions="380,*">
+        <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource HairlineBrush}" BorderThickness="0,0,1,0">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" Margin="18,18,18,8" Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="6">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Classes="title" Text="{l:Tr users.title}" />
+                            <TextBlock Classes="faint small" Text="{Binding CountText}" />
+                        </StackPanel>
+                        <Button Grid.Column="1" Classes="subtle icon" Command="{Binding RefreshCommand}" ToolTip.Tip="{l:Tr common.refresh}">
+                            <c:Icon Data="{x:Static c:Icons.Refresh}" />
+                        </Button>
+                        <Button Grid.Column="2" Classes="primary" Command="{Binding NewCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <c:Icon Data="{x:Static c:Icons.UserPlus}" Width="15" Height="15" />
+                                <TextBlock Text="{l:Tr users.new}" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                        <TextBox Text="{Binding Search}" PlaceholderText="{l:Tr users.search}" Classes.mono="{Binding RawFilter}">
+                            <TextBox.InnerLeftContent>
+                                <c:Icon Data="{x:Static c:Icons.Search}" Width="14" Height="14" Margin="10,0,0,0"
+                                        Foreground="{DynamicResource FaintTextBrush}" />
+                            </TextBox.InnerLeftContent>
+                        </TextBox>
+                        <ToggleButton Grid.Column="1" Classes="subtle icon" Width="34" Height="34" IsChecked="{Binding RawFilter}"
+                                      ToolTip.Tip="{l:Tr list.rawFilter}">
+                            <c:Icon Data="{x:Static c:Icons.Braces}" />
+                        </ToggleButton>
+                    </Grid>
+
+                    <SelectableTextBlock Classes="mono faint" FontSize="11" TextWrapping="Wrap"
+                                         Text="{Binding AppliedFilter, StringFormat='filter={0}'}"
+                                         IsVisible="{Binding AppliedFilter, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" IsVisible="{Binding CanSort}">
+                        <TextBlock Classes="muted small" Text="{l:Tr list.sort}" VerticalAlignment="Center" />
+                        <ComboBox Grid.Column="1" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding Sort}"
+                                  HorizontalAlignment="Stretch">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:SortOption">
+                                    <TextBlock Text="{Binding Label}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <ToggleButton Grid.Column="2" Classes="subtle icon" Width="34" Height="34" IsChecked="{Binding Descending}"
+                                      ToolTip.Tip="{l:Tr list.descending}">
+                            <c:Icon Data="{x:Static c:Icons.SortDescending}" />
+                        </ToggleButton>
+                    </Grid>
+                </StackPanel>
+
+                <Button DockPanel.Dock="Bottom" Margin="18,6,18,14" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                        Command="{Binding LoadMoreCommand}" IsVisible="{Binding CanLoadMore}" Content="{l:Tr list.loadMore}" />
+
+                <Border DockPanel.Dock="Top" Classes="banner" Margin="18,0,18,8"
+                        IsVisible="{Binding Error, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    <SelectableTextBlock Text="{Binding Error}" />
+                </Border>
+
+                <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" IsVisible="{Binding IsLoading}" Margin="18,0,18,4" />
+
+                <Panel>
+                    <StackPanel IsVisible="{Binding IsEmpty}" Margin="24,40" Spacing="6">
+                        <TextBlock Classes="muted" Text="{l:Tr users.empty}" HorizontalAlignment="Center" TextWrapping="Wrap"
+                                   TextAlignment="Center" />
+                    </StackPanel>
+                    <ListBox Classes="rows" ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:UserItemViewModel">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <Border Classes="monogram" Background="{Binding Brush}">
+                                        <TextBlock Text="{Binding Initials}" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                                        <TextBlock Classes="strong" Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Classes="faint small" Text="{Binding Secondary}" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <Border Grid.Column="2" Classes="badge" IsVisible="{Binding IsInactive}">
+                                        <TextBlock Text="{l:Tr user.inactive}" />
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Panel>
+            </DockPanel>
+        </Border>
+
+        <Panel Grid.Column="1">
+            <StackPanel IsVisible="{Binding Editor, Converter={x:Static ObjectConverters.IsNull}}"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+                <c:Icon Data="{x:Static c:Icons.User}" Width="36" Height="36" Foreground="{DynamicResource FaintTextBrush}" />
+                <TextBlock Classes="heading" HorizontalAlignment="Center" Text="{l:Tr users.noneSelected}" />
+                <TextBlock Classes="muted" TextWrapping="Wrap" MaxWidth="360" TextAlignment="Center" Text="{l:Tr users.noneSelectedHint}" />
+            </StackPanel>
+            <ContentControl Content="{Binding Editor}" />
+        </Panel>
+    </Grid>
+</UserControl>

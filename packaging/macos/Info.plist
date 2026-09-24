@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- bundle.sh writes the version for {VERSION}. -->
+<plist version="1.0">
+<dict>
+  <key>CFBundleDevelopmentRegion</key>
+  <string>en</string>
+  <key>CFBundleDisplayName</key>
+  <string>SCIM Studio</string>
+  <key>CFBundleName</key>
+  <string>SCIM Studio</string>
+  <key>CFBundleIdentifier</key>
+  <string>io.github.fvgarrel.scimstudio</string>
+  <key>CFBundleExecutable</key>
+  <string>ScimStudio</string>
+  <key>CFBundleIconFile</key>
+  <string>ScimStudio.icns</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+  <key>CFBundleShortVersionString</key>
+  <string>{VERSION}</string>
+  <key>CFBundleVersion</key>
+  <string>{VERSION}</string>
+  <key>LSApplicationCategoryType</key>
+  <string>public.app-category.developer-tools</string>
+  <key>LSMinimumSystemVersion</key>
+  <string>14.0</string>
+  <key>NSHighResolutionCapable</key>
+  <true/>
+  <key>NSRequiresAquaSystemAppearance</key>
+  <false/>
+</dict>
+</plist>

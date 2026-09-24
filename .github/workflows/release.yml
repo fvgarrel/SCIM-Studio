@@ -1,0 +1,104 @@
+name: Release
+
+# A tag like v1.2.0 builds the app for Windows, Linux and macOS and attaches the downloads to a GitHub release.
+# Started by hand, it builds the same downloads as artifacts of the run, without a release - to try them first.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    name: Publish ${{ matrix.rid }}
+    strategy:
+      matrix:
+        include:
+          - rid: win-x64
+            os: windows-latest
+          - rid: linux-x64
+            os: ubuntu-latest
+          - rid: osx-arm64
+            os: macos-latest
+          - rid: osx-x64
+            os: macos-latest
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # The whole history with its tags: MinVer reads the version from the tag being built.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Test
+        run: dotnet test ScimStudio.slnx -c Release
+
+      # One file on Windows and Linux. On macOS the app bundle is the one thing a person handles, and a plain folder
+      # inside it signs cleanly and starts without unpacking itself first. The XML docs are built - the analyzers need
+      # them - but not shipped.
+      - name: Publish
+        shell: bash
+        run: |
+          single=""
+          if [[ "${{ matrix.rid }}" != osx-* ]]; then
+            single="-p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true"
+          fi
+          dotnet publish src/ScimStudio.App -c Release -r ${{ matrix.rid }} --self-contained $single \
+            -p:DebugType=none -p:PublishDocumentationFile=false -p:PublishReferencesDocumentationFiles=false \
+            -o publish/${{ matrix.rid }}
+
+      - name: Package
+        shell: bash
+        run: |
+          name="ScimStudio-${GITHUB_REF_NAME}-${{ matrix.rid }}"
+          # SkiaSharp and HarfBuzz bring their native symbol files along - 100 MB on Windows that nobody running the app needs.
+          rm -f publish/${{ matrix.rid }}/*.pdb
+          mkdir -p dist
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            # A tag build is the tag's version, as MinVer gave it to the app; a run by hand takes the last tag.
+            version="$(git describe --tags --abbrev=0 2>/dev/null || echo v0.0.0)"
+            bash packaging/macos/bundle.sh publish/${{ matrix.rid }} "${version#v}" "dist/$name.dmg"
+          else
+            cp README.md LICENSE publish/${{ matrix.rid }}/
+            if [[ "$RUNNER_OS" == "Windows" ]]; then
+              7z a "dist/$name.zip" ./publish/${{ matrix.rid }}/*
+            else
+              tar -czf "dist/$name.tar.gz" -C publish/${{ matrix.rid }} .
+            fi
+          fi
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.rid }}
+          path: dist/*
+
+  release:
+    name: Create the release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: publish
+    runs-on: ubuntu-latest
+
+    steps:
+      # The whole history with its tags: the notes list the commits since the tag before this one.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+
+      # GitHub's own notes list pull requests, and changes land here as commits - they would be a bare link.
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          bash packaging/release-notes.sh "$GITHUB_REF_NAME" dist/* > notes.md
+          gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --title "SCIM Studio ${GITHUB_REF_NAME#v}" --notes-file notes.md

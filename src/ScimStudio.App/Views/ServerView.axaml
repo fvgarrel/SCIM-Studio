@@ -1,0 +1,177 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ScimStudio.App.ViewModels"
+             xmlns:scim="using:ScimStudio.Core.Scim"
+             xmlns:c="using:ScimStudio.App.Controls"
+             xmlns:l="using:ScimStudio.App.Localization"
+             x:Class="ScimStudio.App.Views.ServerView"
+             x:DataType="vm:ServerViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="28,24,28,32" Spacing="18">
+
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Spacing="2">
+                    <TextBlock Classes="title" Text="{l:Tr server.title}" />
+                    <SelectableTextBlock Classes="mono faint" Text="{Binding BaseUrl}" />
+                </StackPanel>
+                <Button Grid.Column="1" Command="{Binding LoadCommand}" VerticalAlignment="Top">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <c:Icon Data="{x:Static c:Icons.Refresh}" Width="14" Height="14" />
+                        <TextBlock Text="{l:Tr common.refresh}" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsLoading}" />
+
+            <Border Classes="banner" IsVisible="{Binding Error, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <SelectableTextBlock Text="{Binding Error}" />
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="14">
+                    <TextBlock Classes="eyebrow" Text="{l:Tr server.capabilities}" />
+                    <ItemsControl ItemsSource="{Binding Capabilities}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel ItemSpacing="10" LineSpacing="10" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:CapabilityViewModel">
+                                <Border Classes="well" Width="150" Padding="12,10">
+                                    <StackPanel Spacing="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <c:Icon Data="{x:Static c:Icons.Check}" Foreground="{DynamicResource SuccessBrush}" Thickness="2.6"
+                                                    Width="14" Height="14" IsVisible="{Binding Supported}" />
+                                            <c:Icon Data="{x:Static c:Icons.Minus}" Foreground="{DynamicResource FaintTextBrush}" Thickness="2.6"
+                                                    Width="14" Height="14" IsVisible="{Binding !Supported}" />
+                                            <TextBlock Classes="strong" Text="{Binding Name}" />
+                                        </StackPanel>
+                                        <TextBlock Classes="faint small" Text="{Binding Detail}"
+                                                   IsVisible="{Binding Detail, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Classes="muted" Text="{l:Tr server.authentication}" VerticalAlignment="Center" />
+                        <ItemsControl ItemsSource="{Binding AuthenticationSchemes}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="6" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Border Classes="badge accent">
+                                        <TextBlock Text="{Binding}" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="10">
+                    <TextBlock Classes="eyebrow" Text="{l:Tr server.resourceTypes}" />
+                    <ItemsControl ItemsSource="{Binding ResourceTypes}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="scim:ResourceTypeInfo">
+                                <Grid ColumnDefinitions="140,120,*" ColumnSpacing="12" Margin="0,5">
+                                    <TextBlock Classes="strong" Text="{Binding Name}" />
+                                    <TextBlock Grid.Column="1" Classes="mono" Text="{Binding Endpoint}" />
+                                    <StackPanel Grid.Column="2" Spacing="2">
+                                        <SelectableTextBlock Classes="mono faint" Text="{Binding Schema}" />
+                                        <ItemsControl ItemsSource="{Binding SchemaExtensions}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <SelectableTextBlock Classes="mono faint" Text="{Binding StringFormat='+ {0}'}" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card" Padding="0">
+                <Grid ColumnDefinitions="250,*">
+                    <StackPanel Margin="10,14">
+                        <TextBlock Classes="eyebrow" Text="{l:Tr server.schemas}" Margin="10,0,0,8" />
+                        <ListBox Classes="rows" Padding="0" ItemsSource="{Binding Schemas}" SelectedItem="{Binding SelectedSchema}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:SchemaViewModel">
+                                    <StackPanel Spacing="1">
+                                        <TextBlock Classes="strong" Text="{Binding Name}" />
+                                        <TextBlock Classes="mono faint" FontSize="10" Text="{Binding Id}" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+
+                    <Border Grid.Column="1" BorderBrush="{DynamicResource HairlineBrush}" BorderThickness="1,0,0,0" Padding="20,16">
+                        <StackPanel Spacing="12" DataContext="{Binding SelectedSchema}" x:DataType="vm:SchemaViewModel">
+                            <StackPanel Spacing="2">
+                                <TextBlock Classes="heading" Text="{Binding Name}" />
+                                <SelectableTextBlock Classes="mono faint" Text="{Binding Id}" />
+                                <TextBlock Classes="muted small" Text="{Binding Description}" TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <Grid ColumnDefinitions="*,110,100,80,80,150" ColumnSpacing="10" Margin="0,6,0,0">
+                                <TextBlock Classes="eyebrow" Text="{l:Tr server.attribute}" />
+                                <TextBlock Grid.Column="1" Classes="eyebrow" Text="{l:Tr server.type}" />
+                                <TextBlock Grid.Column="2" Classes="eyebrow" Text="{l:Tr server.mutability}" />
+                                <TextBlock Grid.Column="3" Classes="eyebrow" Text="{l:Tr server.returned}" />
+                                <TextBlock Grid.Column="4" Classes="eyebrow" Text="{l:Tr server.uniqueness}" />
+                                <TextBlock Grid.Column="5" Classes="eyebrow" Text="{l:Tr server.flags}" />
+                            </Grid>
+                            <Border Classes="hairline" />
+                            <ItemsControl ItemsSource="{Binding Attributes}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:AttributeRowViewModel">
+                                        <Grid ColumnDefinitions="*,110,100,80,80,150" ColumnSpacing="10" Margin="0,5"
+                                              ToolTip.Tip="{Binding Description}">
+                                            <TextBlock Classes="mono" Classes.faint="{Binding IsSub}" Text="{Binding Name}"
+                                                       Margin="{Binding Indent}" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Grid.Column="1" Classes="mono muted" Text="{Binding Type}" />
+                                            <TextBlock Grid.Column="2" Classes="small muted" Text="{Binding Mutability}" />
+                                            <TextBlock Grid.Column="3" Classes="small muted" Text="{Binding Returned}" />
+                                            <TextBlock Grid.Column="4" Classes="small muted" Text="{Binding Uniqueness}" />
+                                            <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
+                                                <Border Classes="badge accent" Padding="6,0" IsVisible="{Binding Required}">
+                                                    <TextBlock Text="required" FontSize="10" />
+                                                </Border>
+                                                <Border Classes="badge" Padding="6,0" IsVisible="{Binding CaseExact}">
+                                                    <TextBlock Text="caseExact" FontSize="10" />
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Expander HorizontalAlignment="Stretch">
+                <Expander.Header>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <c:Icon Data="{x:Static c:Icons.Braces}" Width="15" Height="15" />
+                        <TextBlock Text="{l:Tr server.configJson}" />
+                    </StackPanel>
+                </Expander.Header>
+                <c:JsonText Classes="mono" Json="{Binding ConfigJson}" />
+            </Expander>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

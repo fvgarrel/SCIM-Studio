@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # The whole history with its tags, so MinVer versions the build as it would locally.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build
+        run: dotnet build ScimStudio.slnx -c Release
+
+      # The trailing slashes matter: without them --include matches nothing and the check passes on anything.
+      - name: Check formatting
+        if: runner.os == 'Linux'
+        run: dotnet format ScimStudio.slnx --verify-no-changes --no-restore --include src/ tests/
+
+      # The app tests draw every page headlessly and save it under artifacts/screenshots.
+      - name: Test
+        run: dotnet test ScimStudio.slnx -c Release --no-build
+
+      - name: Keep the screenshots
+        if: always() && runner.os == 'Linux'
+        uses: actions/upload-artifact@v7
+        with:
+          name: screenshots
+          path: artifacts/screenshots
+          if-no-files-found: ignore

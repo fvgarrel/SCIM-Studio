@@ -1,0 +1,78 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ScimStudio.App.ViewModels"
+        xmlns:s="using:ScimStudio.App.Services"
+        xmlns:c="using:ScimStudio.App.Controls"
+        xmlns:l="using:ScimStudio.App.Localization"
+        x:Class="ScimStudio.App.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="SCIM Studio"
+        Icon="avares://ScimStudio/Assets/scimstudio.ico"
+        Width="1320" Height="840"
+        MinWidth="1000" MinHeight="640"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Escape" Command="{Binding Dialogs.Current.CancelCommand, FallbackValue={x:Null}}" />
+    </Window.KeyBindings>
+
+    <Panel>
+        <ContentControl Content="{Binding Page}" />
+
+        <!-- A question over everything else. -->
+        <Border Background="{DynamicResource OverlayBrush}"
+                IsVisible="{Binding Dialogs.Current, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <Border Classes="card" Width="440" Padding="24" BoxShadow="{DynamicResource PopupShadow}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    DataContext="{Binding Dialogs.Current}" x:DataType="s:ConfirmDialogViewModel">
+                <StackPanel Spacing="10">
+                    <TextBlock Classes="heading" Text="{Binding Title}" TextWrapping="Wrap" />
+                    <TextBlock Classes="muted" Text="{Binding Message}" TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" Margin="0,14,0,0">
+                        <Button Content="{l:Tr common.cancel}" Command="{Binding CancelCommand}" />
+                        <Button Classes="primary" Classes.dangerSolid="{Binding IsDanger}"
+                                Content="{Binding ConfirmLabel}" Command="{Binding ConfirmCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Border>
+
+        <!-- Toasts, newest at the bottom. -->
+        <ItemsControl ItemsSource="{Binding Notifier.Toasts}"
+                      HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                      Margin="20" Width="380">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Spacing="8" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="s:ToastViewModel">
+                    <Border Classes="card" Padding="14,12" BoxShadow="{DynamicResource PopupShadow}">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Panel Width="18" Height="18" VerticalAlignment="Top" Margin="0,1,0,0">
+                                <c:Icon Data="{x:Static c:Icons.Check}" Foreground="{DynamicResource SuccessBrush}"
+                                        IsVisible="{Binding Kind, Converter={x:Static vm:Is.Success}}" Width="18" Height="18" />
+                                <c:Icon Data="{x:Static c:Icons.Alert}" Foreground="{DynamicResource WarningBrush}"
+                                        IsVisible="{Binding Kind, Converter={x:Static vm:Is.Warning}}" Width="18" Height="18" />
+                                <c:Icon Data="{x:Static c:Icons.Alert}" Foreground="{DynamicResource DangerBrush}"
+                                        IsVisible="{Binding Kind, Converter={x:Static vm:Is.Error}}" Width="18" Height="18" />
+                                <c:Icon Data="{x:Static c:Icons.Info}" Foreground="{DynamicResource AccentBrush}"
+                                        IsVisible="{Binding Kind, Converter={x:Static vm:Is.Info}}" Width="18" Height="18" />
+                            </Panel>
+                            <StackPanel Grid.Column="1" Spacing="3">
+                                <TextBlock Classes="strong" Text="{Binding Title}" TextWrapping="Wrap" />
+                                <SelectableTextBlock Classes="muted small" Text="{Binding Detail}" TextWrapping="Wrap"
+                                                     IsVisible="{Binding HasDetail}" MaxHeight="120" />
+                            </StackPanel>
+                            <Button Grid.Column="2" Classes="subtle icon" Width="24" Height="24" MinHeight="24"
+                                    VerticalAlignment="Top" Command="{Binding DismissCommand}">
+                                <c:Icon Data="{x:Static c:Icons.Close}" Width="14" Height="14" />
+                            </Button>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Panel>
+</Window>

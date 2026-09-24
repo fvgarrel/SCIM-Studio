@@ -1,0 +1,116 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        The palette, once per theme. Surfaces step up in brightness from the window to a card; structure comes from hairlines,
+        and colour is kept for the accent and for state - never for decoration.
+    -->
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="WindowBrush" Color="#F4F5F7" />
+            <SolidColorBrush x:Key="SidebarBrush" Color="#EDEFF2" />
+            <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="SurfaceAltBrush" Color="#F7F8FA" />
+            <SolidColorBrush x:Key="HoverBrush" Color="#0D1B2433" />
+            <SolidColorBrush x:Key="SelectedBrush" Color="#E6ECFD" />
+            <SolidColorBrush x:Key="HairlineBrush" Color="#E1E4E9" />
+            <SolidColorBrush x:Key="StrongHairlineBrush" Color="#CDD2DA" />
+            <SolidColorBrush x:Key="TextBrush" Color="#15181C" />
+            <SolidColorBrush x:Key="MutedTextBrush" Color="#586170" />
+            <SolidColorBrush x:Key="FaintTextBrush" Color="#8A93A0" />
+            <SolidColorBrush x:Key="AccentBrush" Color="#3563E9" />
+            <SolidColorBrush x:Key="AccentHoverBrush" Color="#2A53CC" />
+            <SolidColorBrush x:Key="AccentPressedBrush" Color="#2347B2" />
+            <SolidColorBrush x:Key="AccentSoftBrush" Color="#E7EDFD" />
+            <SolidColorBrush x:Key="AccentTextBrush" Color="#2347B2" />
+            <SolidColorBrush x:Key="OnAccentBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="SuccessBrush" Color="#1E8753" />
+            <SolidColorBrush x:Key="SuccessSoftBrush" Color="#E3F3E9" />
+            <SolidColorBrush x:Key="WarningBrush" Color="#A3650C" />
+            <SolidColorBrush x:Key="WarningSoftBrush" Color="#FBF0D9" />
+            <SolidColorBrush x:Key="DangerBrush" Color="#C93434" />
+            <SolidColorBrush x:Key="DangerSoftBrush" Color="#FBE6E6" />
+            <SolidColorBrush x:Key="NeutralSoftBrush" Color="#EDEFF2" />
+            <SolidColorBrush x:Key="OverlayBrush" Color="#59101418" />
+            <SolidColorBrush x:Key="JsonKeyBrush" Color="#2347B2" />
+            <SolidColorBrush x:Key="JsonStringBrush" Color="#1B7549" />
+            <SolidColorBrush x:Key="JsonNumberBrush" Color="#B0520A" />
+            <SolidColorBrush x:Key="JsonLiteralBrush" Color="#8B35D6" />
+            <SolidColorBrush x:Key="JsonPunctuationBrush" Color="#8A93A0" />
+            <BoxShadows x:Key="CardShadow">0 1 2 0 #0F0F172A</BoxShadows>
+            <BoxShadows x:Key="PopupShadow">0 12 32 0 #240F172A</BoxShadows>
+
+            <!-- Fluent's own button, as a raised surface with a hairline rather than a grey slab. -->
+            <SolidColorBrush x:Key="ButtonBackground" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#F3F5F8" />
+            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#EAEDF1" />
+            <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#F7F8FA" />
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="#D3D8DF" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#C3C9D2" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#C3C9D2" />
+            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#E3E6EA" />
+            <SolidColorBrush x:Key="ButtonForeground" Color="#15181C" />
+            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="#15181C" />
+            <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#15181C" />
+            <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#A2A9B3" />
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="WindowBrush" Color="#101216" />
+            <SolidColorBrush x:Key="SidebarBrush" Color="#0C0E11" />
+            <SolidColorBrush x:Key="SurfaceBrush" Color="#171A1F" />
+            <SolidColorBrush x:Key="SurfaceAltBrush" Color="#1C2026" />
+            <SolidColorBrush x:Key="HoverBrush" Color="#12FFFFFF" />
+            <SolidColorBrush x:Key="SelectedBrush" Color="#1E2742" />
+            <SolidColorBrush x:Key="HairlineBrush" Color="#262B32" />
+            <SolidColorBrush x:Key="StrongHairlineBrush" Color="#343A43" />
+            <SolidColorBrush x:Key="TextBrush" Color="#E8EAED" />
+            <SolidColorBrush x:Key="MutedTextBrush" Color="#A2A9B4" />
+            <SolidColorBrush x:Key="FaintTextBrush" Color="#6C7481" />
+            <SolidColorBrush x:Key="AccentBrush" Color="#5479F7" />
+            <SolidColorBrush x:Key="AccentHoverBrush" Color="#6A8BFF" />
+            <SolidColorBrush x:Key="AccentPressedBrush" Color="#4769E0" />
+            <SolidColorBrush x:Key="AccentSoftBrush" Color="#1D2645" />
+            <SolidColorBrush x:Key="AccentTextBrush" Color="#A6B8FF" />
+            <SolidColorBrush x:Key="OnAccentBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="SuccessBrush" Color="#46C387" />
+            <SolidColorBrush x:Key="SuccessSoftBrush" Color="#132A1F" />
+            <SolidColorBrush x:Key="WarningBrush" Color="#E2AA45" />
+            <SolidColorBrush x:Key="WarningSoftBrush" Color="#2E2412" />
+            <SolidColorBrush x:Key="DangerBrush" Color="#F07474" />
+            <SolidColorBrush x:Key="DangerSoftBrush" Color="#331B1D" />
+            <SolidColorBrush x:Key="NeutralSoftBrush" Color="#20252C" />
+            <SolidColorBrush x:Key="OverlayBrush" Color="#99000000" />
+            <SolidColorBrush x:Key="JsonKeyBrush" Color="#9EB3FF" />
+            <SolidColorBrush x:Key="JsonStringBrush" Color="#7DD3A5" />
+            <SolidColorBrush x:Key="JsonNumberBrush" Color="#F2B46C" />
+            <SolidColorBrush x:Key="JsonLiteralBrush" Color="#D09CFF" />
+            <SolidColorBrush x:Key="JsonPunctuationBrush" Color="#6C7481" />
+            <BoxShadows x:Key="CardShadow">0 1 2 0 #40000000</BoxShadows>
+            <BoxShadows x:Key="PopupShadow">0 12 32 0 #80000000</BoxShadows>
+
+            <SolidColorBrush x:Key="ButtonBackground" Color="#1F2329" />
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#272C33" />
+            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#2D323A" />
+            <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#1A1D22" />
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="#343A43" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#414852" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#414852" />
+            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#2A2F36" />
+            <SolidColorBrush x:Key="ButtonForeground" Color="#E8EAED" />
+            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="#E8EAED" />
+            <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#E8EAED" />
+            <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#5F6671" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <FontFamily x:Key="ContentControlThemeFontFamily">fonts:Inter#Inter</FontFamily>
+    <FontFamily x:Key="MonoFont">Cascadia Mono, Consolas, SF Mono, Menlo, DejaVu Sans Mono, monospace</FontFamily>
+
+    <Thickness x:Key="ButtonBorderThemeThickness">1</Thickness>
+    <CornerRadius x:Key="ControlCornerRadius">6</CornerRadius>
+    <CornerRadius x:Key="OverlayCornerRadius">10</CornerRadius>
+    <CornerRadius x:Key="CardRadius">10</CornerRadius>
+    <CornerRadius x:Key="RowRadius">7</CornerRadius>
+
+</ResourceDictionary>

@@ -1,0 +1,148 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+trim_trailing_whitespace = true
+
+[*.{csproj,props,targets,slnx,json,xml,yml,yaml,md}]
+indent_size = 2
+
+[*.axaml]
+indent_size = 4
+
+[*.{cs,csx}]
+indent_size = 4
+# Code and comments alike. `dotnet format` does not wrap, so this is a
+# promise kept by hand: wrap only when a line would not fit.
+max_line_length = 150
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_using_directive_placement = outside_namespace:warning
+dotnet_sort_system_directives_first = true
+
+# An unused using is a build error: it claims a dependency the file no longer
+# has. Needs GenerateDocumentationFile, which Directory.Build.props sets.
+dotnet_diagnostic.IDE0005.severity = warning
+
+# ── Braces ───────────────────────────────────────────────────────────────────
+# A brace opens on the line that opens the block, and a keyword that
+# continues a block starts on the line that closed it:
+#
+#     if (taken) {
+#     } else {
+#     }
+csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = true
+
+# ── Expression bodies ────────────────────────────────────────────────────────
+# `=>` is for a getter that fits on one line. A method, a constructor, an
+# operator or a local function opens a block, even for a single statement.
+csharp_style_expression_bodied_properties = when_on_single_line:warning
+csharp_style_expression_bodied_indexers = when_on_single_line:warning
+csharp_style_expression_bodied_accessors = when_on_single_line:warning
+csharp_style_expression_bodied_methods = false:warning
+csharp_style_expression_bodied_constructors = false:warning
+csharp_style_expression_bodied_operators = false:warning
+csharp_style_expression_bodied_local_functions = false:warning
+resharper_csharp_method_or_operator_body = block_body
+resharper_csharp_local_function_body = block_body
+resharper_csharp_constructor_or_destructor_body = block_body
+resharper_csharp_accessor_owner_body = expression_body
+resharper_arrange_accessor_owner_body_highlighting = none
+
+# A predicate stays an expression, a handler opens a block; no setting can
+# tell the two apart, so lambdas are left to judgement.
+csharp_style_expression_bodied_lambdas = true:silent
+dotnet_diagnostic.IDE0053.severity = none
+
+# An `if` that returns or assigns stays an `if`.
+dotnet_style_prefer_conditional_expression_over_return = false
+dotnet_style_prefer_conditional_expression_over_assignment = false
+
+# ── Naming ───────────────────────────────────────────────────────────────────
+#     const string BEARER                   constants, fields and locals alike
+#     private readonly HttpClient _http     private fields
+#     private static readonly Json Options  private static readonly fields
+#     class ScimClient                      types, members, public fields
+#     interface IScimDialect, TValue        interfaces and type parameters
+#     var baseUrl, string userName          locals and parameters
+dotnet_diagnostic.IDE1006.severity = warning
+
+dotnet_naming_style.upper_snake.capitalization = all_upper
+dotnet_naming_style.upper_snake.word_separator = _
+dotnet_naming_style.pascal.capitalization = pascal_case
+dotnet_naming_style.camel.capitalization = camel_case
+dotnet_naming_style.underscore_camel.capitalization = camel_case
+dotnet_naming_style.underscore_camel.required_prefix = _
+dotnet_naming_style.i_pascal.capitalization = pascal_case
+dotnet_naming_style.i_pascal.required_prefix = I
+dotnet_naming_style.t_pascal.capitalization = pascal_case
+dotnet_naming_style.t_pascal.required_prefix = T
+
+dotnet_naming_symbols.constants.applicable_kinds = field, local
+dotnet_naming_symbols.constants.applicable_accessibilities = *
+dotnet_naming_symbols.constants.required_modifiers = const
+dotnet_naming_rule.constants.symbols = constants
+dotnet_naming_rule.constants.style = upper_snake
+dotnet_naming_rule.constants.severity = warning
+
+dotnet_naming_symbols.private_static_readonly_fields.applicable_kinds = field
+dotnet_naming_symbols.private_static_readonly_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_static_readonly_fields.required_modifiers = static, readonly
+dotnet_naming_rule.private_static_readonly_fields.symbols = private_static_readonly_fields
+dotnet_naming_rule.private_static_readonly_fields.style = pascal
+dotnet_naming_rule.private_static_readonly_fields.severity = warning
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_rule.private_fields.symbols = private_fields
+dotnet_naming_rule.private_fields.style = underscore_camel
+dotnet_naming_rule.private_fields.severity = warning
+
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_symbols.interfaces.applicable_accessibilities = *
+dotnet_naming_rule.interfaces.symbols = interfaces
+dotnet_naming_rule.interfaces.style = i_pascal
+dotnet_naming_rule.interfaces.severity = warning
+
+dotnet_naming_symbols.type_parameters.applicable_kinds = type_parameter
+dotnet_naming_rule.type_parameters.symbols = type_parameters
+dotnet_naming_rule.type_parameters.style = t_pascal
+dotnet_naming_rule.type_parameters.severity = warning
+
+dotnet_naming_symbols.types_and_members.applicable_kinds = namespace, class, struct, enum, delegate, property, method, event, local_function, field
+dotnet_naming_symbols.types_and_members.applicable_accessibilities = *
+dotnet_naming_rule.types_and_members.symbols = types_and_members
+dotnet_naming_rule.types_and_members.style = pascal
+dotnet_naming_rule.types_and_members.severity = warning
+
+dotnet_naming_symbols.locals_and_parameters.applicable_kinds = local, parameter
+dotnet_naming_rule.locals_and_parameters.symbols = locals_and_parameters
+dotnet_naming_rule.locals_and_parameters.style = camel
+dotnet_naming_rule.locals_and_parameters.severity = warning
+
+# ── Analyzer rules turned off on purpose ─────────────────────────────────────
+# Directory.Build.props sets latest-recommended and TreatWarningsAsErrors.
+# These are switched off with a reason rather than worked around at each call.
+
+# Not every public member needs a comment; much of it reads from the code.
+dotnet_diagnostic.CS1591.severity = none
+
+# CA1707: constants are UPPER_SNAKE by the naming rules above, and the two
+# cannot both hold.
+dotnet_diagnostic.CA1707.severity = none
+
+# CA1716: names like `Error` or `Next` would clash with a keyword of another
+# .NET language. Nothing here is consumed from VB or F#.
+dotnet_diagnostic.CA1716.severity = none
+
+[src/ScimStudio.App/**.cs]
+# CA1822: a view model's property is read through its instance by a binding,
+# whether or not it touches the instance's state; static, XAML cannot bind it.
+dotnet_diagnostic.CA1822.severity = none

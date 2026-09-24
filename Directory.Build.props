@@ -1,0 +1,40 @@
+<Project>
+
+  <!--
+    One set of rules for every project. A project file holds what makes that
+    project different and nothing else.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- A warning is a defect that has not been triaged yet. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+
+    <!-- On so the compiler checks every /// comment and IDE0005 runs in the build. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <IsPackable>false</IsPackable>
+    <Authors>Florian von Garrel</Authors>
+    <Product>SCIM Studio</Product>
+    <Copyright>Copyright © 2026 Florian von Garrel</Copyright>
+  </PropertyGroup>
+
+  <!--
+    The version is the latest tag, read by MinVer at build time: v1.2.0 on the
+    commit builds 1.2.0, a commit after it 1.2.1-alpha.0.1. A number written
+    here would be a second truth that the tag and the app could disagree on.
+  -->
+  <PropertyGroup>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,186 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ScimStudio.App.ViewModels"
+             xmlns:c="using:ScimStudio.App.Controls"
+             xmlns:l="using:ScimStudio.App.Localization"
+             x:Class="ScimStudio.App.Views.GroupEditorView"
+             x:DataType="vm:GroupEditorViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="28,24,28,32" Spacing="18" MaxWidth="900" HorizontalAlignment="Stretch">
+
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                <Panel>
+                    <Border Classes="monogram large" CornerRadius="12" Background="{Binding Brush}" IsVisible="{Binding IsExisting}">
+                        <TextBlock Text="{Binding Initials}" />
+                    </Border>
+                    <Border Classes="monogram large" CornerRadius="12" Background="{DynamicResource AccentSoftBrush}" IsVisible="{Binding IsNew}">
+                        <c:Icon Data="{x:Static c:Icons.Users}" Width="22" Height="22" Foreground="{DynamicResource AccentTextBrush}" />
+                    </Border>
+                </Panel>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Classes="title" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Classes="muted" Text="{l:Tr group.newHint}" IsVisible="{Binding IsNew}" TextWrapping="Wrap" />
+                    <SelectableTextBlock Classes="mono faint" Text="{Binding Id}" IsVisible="{Binding IsExisting}" />
+                </StackPanel>
+            </Grid>
+
+            <WrapPanel ItemSpacing="8" LineSpacing="8">
+                <Button Classes="primary" Command="{Binding SaveCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <c:Icon Data="{x:Static c:Icons.Save}" Width="14" Height="14" />
+                        <TextBlock Text="{Binding SaveLabel}" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding RevertCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <c:Icon Data="{x:Static c:Icons.Undo}" Width="14" Height="14" />
+                        <TextBlock Text="{l:Tr common.revert}" />
+                    </StackPanel>
+                </Button>
+                <Button Classes="subtle danger" Command="{Binding DeleteCommand}" IsVisible="{Binding IsExisting}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <c:Icon Data="{x:Static c:Icons.Trash}" Width="14" Height="14" />
+                        <TextBlock Text="{l:Tr common.delete}" />
+                    </StackPanel>
+                </Button>
+                <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" Width="80" VerticalAlignment="Center" />
+            </WrapPanel>
+
+            <Border Classes="banner" IsVisible="{Binding Error, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <SelectableTextBlock Text="{Binding Error}" />
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="16">
+                    <TextBlock Classes="eyebrow" Text="{l:Tr group.section}" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                        <StackPanel>
+                            <TextBlock Classes="label" Text="{l:Tr group.displayName}" />
+                            <TextBox Text="{Binding DisplayName}" PlaceholderText="{l:Tr group.displayNameHint}" />
+                            <TextBlock Classes="error" Margin="0,4,0,0" Text="{l:Tr group.displayNameRequired}"
+                                       IsVisible="{Binding NameMissing}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Classes="label" Text="{l:Tr user.externalId}" />
+                            <TextBox Classes="mono" Text="{Binding ExternalId}" PlaceholderText="{l:Tr common.optional}">
+                                <TextBox.InnerRightContent>
+                                    <Button Classes="subtle icon" Width="28" Height="28" MinHeight="28" Margin="0,0,3,0"
+                                            Command="{Binding GenerateExternalIdCommand}" ToolTip.Tip="{l:Tr common.generate}">
+                                        <c:Icon Data="{x:Static c:Icons.Shuffle}" Width="14" Height="14" />
+                                    </Button>
+                                </TextBox.InnerRightContent>
+                            </TextBox>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Classes="eyebrow" Text="{l:Tr group.members}" VerticalAlignment="Center" />
+                        <Border Classes="badge" Padding="7,1">
+                            <TextBlock Text="{Binding Members.Count}" />
+                        </Border>
+                    </StackPanel>
+                    <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding MembersHint}" />
+
+                    <TextBox Text="{Binding CandidateSearch}" PlaceholderText="{l:Tr group.addPeople}">
+                        <TextBox.InnerLeftContent>
+                            <c:Icon Data="{x:Static c:Icons.UserPlus}" Width="14" Height="14" Margin="10,0,0,0"
+                                    Foreground="{DynamicResource FaintTextBrush}" />
+                        </TextBox.InnerLeftContent>
+                    </TextBox>
+
+                    <Border Classes="well" Padding="4" IsVisible="{Binding Candidates.Count, Converter={x:Static vm:Is.Positive}}">
+                        <ItemsControl ItemsSource="{Binding Candidates}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MemberViewModel">
+                                    <Button Classes="row" CommandParameter="{Binding}"
+                                            Command="{Binding $parent[UserControl].((vm:GroupEditorViewModel)DataContext).AddMemberCommand}">
+                                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                            <Border Classes="monogram" Width="26" Height="26" CornerRadius="13" Background="{Binding Brush}">
+                                                <TextBlock Text="{Binding Initials}" FontSize="10" />
+                                            </Border>
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Classes="faint small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                            <c:Icon Grid.Column="2" Data="{x:Static c:Icons.Plus}" Foreground="{DynamicResource AccentBrush}" />
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+
+                    <TextBlock Classes="muted small" Text="{l:Tr group.noMembers}" IsVisible="{Binding !HasMembers}" />
+                    <ItemsControl ItemsSource="{Binding Members}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:MemberViewModel">
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10" Margin="0,3">
+                                    <Border Classes="monogram" Width="28" Height="28" CornerRadius="14" Background="{Binding Brush}">
+                                        <TextBlock Text="{Binding Initials}" FontSize="11" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Classes="faint mono" FontSize="11" Text="{Binding Id}" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <Button Grid.Column="2" Classes="subtle icon" Width="28" Height="28" MinHeight="28"
+                                            Command="{Binding $parent[UserControl].((vm:GroupEditorViewModel)DataContext).OpenMemberCommand}"
+                                            CommandParameter="{Binding}" ToolTip.Tip="{l:Tr group.openMember}">
+                                        <c:Icon Data="{x:Static c:Icons.ChevronRight}" Width="14" Height="14" />
+                                    </Button>
+                                    <Button Grid.Column="3" Classes="subtle icon danger" Width="28" Height="28" MinHeight="28"
+                                            Command="{Binding $parent[UserControl].((vm:GroupEditorViewModel)DataContext).RemoveMemberCommand}"
+                                            CommandParameter="{Binding}" ToolTip.Tip="{l:Tr group.removeMember}">
+                                        <c:Icon Data="{x:Static c:Icons.UserMinus}" Width="14" Height="14" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card" IsVisible="{Binding IsExisting}">
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="eyebrow" Text="{l:Tr common.details}" />
+                    <Grid ColumnDefinitions="130,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+                        <TextBlock Classes="muted" Text="id" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                            <SelectableTextBlock Classes="mono" Text="{Binding Id}" VerticalAlignment="Center" />
+                            <Button Classes="subtle icon" Width="24" Height="24" MinHeight="24" Command="{Binding CopyIdCommand}"
+                                    ToolTip.Tip="{l:Tr common.copy}">
+                                <c:Icon Data="{x:Static c:Icons.Copy}" Width="13" Height="13" />
+                            </Button>
+                        </StackPanel>
+                        <TextBlock Grid.Row="1" Classes="muted" Text="{l:Tr common.created}" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Created}" />
+                        <TextBlock Grid.Row="2" Classes="muted" Text="{l:Tr common.modified}" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Modified}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Expander IsVisible="{Binding IsExisting}" HorizontalAlignment="Stretch">
+                <Expander.Header>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <c:Icon Data="{x:Static c:Icons.Braces}" Width="15" Height="15" />
+                        <TextBlock Text="{l:Tr common.json}" />
+                    </StackPanel>
+                </Expander.Header>
+                <Grid RowDefinitions="Auto,*" RowSpacing="8">
+                    <Button Classes="subtle" HorizontalAlignment="Right" Command="{Binding CopyJsonCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <c:Icon Data="{x:Static c:Icons.Copy}" Width="14" Height="14" />
+                            <TextBlock Text="{l:Tr common.copy}" />
+                        </StackPanel>
+                    </Button>
+                    <c:JsonText Grid.Row="1" Classes="mono" Json="{Binding Json}" />
+                </Grid>
+            </Expander>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

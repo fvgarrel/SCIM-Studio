@@ -1,0 +1,86 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ScimStudio.App.ViewModels"
+             xmlns:c="using:ScimStudio.App.Controls"
+             xmlns:l="using:ScimStudio.App.Localization"
+             x:Class="ScimStudio.App.Views.ShellView"
+             x:DataType="vm:ShellViewModel">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Where one is connected, and in which dialect the requests are written. -->
+        <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource HairlineBrush}" BorderThickness="0,0,0,1"
+                Padding="14,10">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto" ColumnSpacing="14">
+                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <c:Logo Size="28" />
+                    <TextBlock Classes="strong" Text="SCIM Studio" VerticalAlignment="Center" FontSize="14" />
+                </StackPanel>
+
+                <Border Grid.Column="1" Width="1" Height="22" Background="{DynamicResource HairlineBrush}" />
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Ellipse Width="8" Height="8" Fill="{DynamicResource SuccessBrush}" VerticalAlignment="Center"
+                             ToolTip.Tip="{l:Tr shell.connected}" />
+                    <TextBlock Classes="strong" Text="{Binding ProfileName}" VerticalAlignment="Center" />
+                    <Border Classes="badge accent" IsVisible="{Binding IsDemo}">
+                        <TextBlock Text="{l:Tr shell.demo}" />
+                    </Border>
+                    <SelectableTextBlock Classes="mono faint" Text="{Binding BaseUrl}" VerticalAlignment="Center"
+                                         TextTrimming="CharacterEllipsis" MaxWidth="520" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <TextBlock Classes="muted small" Text="{l:Tr shell.dialect}" VerticalAlignment="Center" />
+                    <ComboBox ItemsSource="{Binding Dialects}" SelectedItem="{Binding SelectedDialect}" MinWidth="200"
+                              ToolTip.Tip="{Binding SelectedDialect.About}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:DialectOption">
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <Button Grid.Column="4" Classes="subtle" Command="{Binding DisconnectCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <c:Icon Data="{x:Static c:Icons.LogOut}" Width="15" Height="15" />
+                        <TextBlock Text="{l:Tr shell.disconnect}" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" ColumnDefinitions="208,*">
+            <Border Background="{DynamicResource SidebarBrush}" BorderBrush="{DynamicResource HairlineBrush}" BorderThickness="0,0,1,0">
+                <DockPanel Margin="10,12">
+                    <ListBox DockPanel.Dock="Bottom" Classes="nav" ItemsSource="{Binding Footer}" SelectedItem="{Binding SelectedFooter}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:NavItemViewModel">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <c:Icon Data="{Binding Icon}" />
+                                    <TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <ListBox Classes="nav" ItemsSource="{Binding Navigation}" SelectedItem="{Binding Selected}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:NavItemViewModel">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                    <c:Icon Data="{Binding Icon}" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" />
+                                    <Border Grid.Column="2" Classes="badge" IsVisible="{Binding HasBadge}" Padding="6,1">
+                                        <TextBlock Text="{Binding Badge}" FontSize="10" />
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <ContentControl Grid.Column="1" Content="{Binding Page}" />
+        </Grid>
+    </Grid>
+</UserControl>

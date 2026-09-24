@@ -1,0 +1,236 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ScimStudio.App.ViewModels"
+             xmlns:c="using:ScimStudio.App.Controls"
+             xmlns:l="using:ScimStudio.App.Localization"
+             x:Class="ScimStudio.App.Views.ConnectView"
+             x:DataType="vm:ConnectViewModel">
+
+    <ScrollViewer>
+        <Grid RowDefinitions="Auto,*" MaxWidth="1100" Margin="40,32,40,40">
+
+            <!-- Brand, and the two settings a first start may want before anything else. -->
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <c:Logo Size="44" />
+                <StackPanel Grid.Column="1" Margin="14,0" VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Classes="title" Text="SCIM Studio" />
+                    <TextBlock Classes="muted" Text="{l:Tr connect.tagline}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center"
+                            DataContext="{Binding Preferences}" x:DataType="vm:SettingsViewModel">
+                    <ListBox Classes="segmented" ItemsSource="{Binding Languages}" SelectedItem="{Binding Language}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ChoiceViewModel">
+                                <TextBlock Text="{Binding Label}" FontSize="12" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <ListBox Classes="segmented" ItemsSource="{Binding Themes}" SelectedItem="{Binding Theme}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ChoiceViewModel">
+                                <TextBlock Text="{Binding Label}" FontSize="12" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="1" ColumnDefinitions="300,*" ColumnSpacing="20" Margin="0,28,0,0">
+
+                <!-- Profiles, and the way in without a server. -->
+                <StackPanel Spacing="16">
+                    <Border Classes="card" Padding="10">
+                        <StackPanel>
+                            <Grid ColumnDefinitions="*,Auto" Margin="8,2,0,6">
+                                <TextBlock Classes="eyebrow" Text="{l:Tr connect.profiles}" VerticalAlignment="Center" />
+                                <Button Grid.Column="1" Classes="subtle icon" Command="{Binding NewProfileCommand}"
+                                        ToolTip.Tip="{l:Tr connect.newProfile}">
+                                    <c:Icon Data="{x:Static c:Icons.Plus}" />
+                                </Button>
+                            </Grid>
+                            <TextBlock Classes="muted small" TextWrapping="Wrap" Margin="8,2,8,10"
+                                       Text="{l:Tr connect.noProfiles}" IsVisible="{Binding !HasProfiles}" />
+                            <ListBox Classes="rows" Padding="0" ItemsSource="{Binding Profiles}" SelectedItem="{Binding Selected}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ProfileViewModel">
+                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                            <c:Icon Data="{x:Static c:Icons.Server}" Foreground="{DynamicResource MutedTextBrush}" />
+                                            <StackPanel Grid.Column="1" Spacing="1">
+                                                <TextBlock Classes="strong" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Classes="faint small" Text="{Binding Host}" TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Classes="card">
+                        <StackPanel Spacing="10">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <c:Icon Data="{x:Static c:Icons.Flask}" Foreground="{DynamicResource AccentBrush}" />
+                                <TextBlock Classes="strong" Text="{l:Tr demo.title}" />
+                            </StackPanel>
+                            <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr demo.about}" />
+                            <Button Command="{Binding StartDemoCommand}" HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <c:Icon Data="{x:Static c:Icons.Play}" Width="14" Height="14" />
+                                    <TextBlock Text="{l:Tr demo.start}" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- The profile being edited. -->
+                <Panel Grid.Column="1" VerticalAlignment="Top">
+                    <Border Classes="card" Padding="48" IsVisible="{Binding !HasSelection}">
+                        <StackPanel Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <c:Icon Data="{x:Static c:Icons.Link}" Width="30" Height="30" Foreground="{DynamicResource FaintTextBrush}" />
+                            <TextBlock Classes="heading" HorizontalAlignment="Center" Text="{l:Tr connect.emptyTitle}" />
+                            <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="380"
+                                       Text="{l:Tr connect.emptyText}" />
+                            <Button Classes="primary" HorizontalAlignment="Center" Margin="0,8,0,0" Command="{Binding NewProfileCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <c:Icon Data="{x:Static c:Icons.Plus}" Width="14" Height="14" />
+                                    <TextBlock Text="{l:Tr connect.newProfile}" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Classes="card" Padding="0" IsVisible="{Binding HasSelection}">
+                        <StackPanel>
+                            <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" CornerRadius="10,10,0,0" />
+                            <StackPanel Margin="26,22,26,26" Spacing="20">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Classes="heading" Text="{Binding Selected.Title, FallbackValue=''}" />
+                                    <TextBlock Classes="muted small" Text="{l:Tr connect.formHint}" />
+                                </StackPanel>
+
+                                <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="16">
+                                    <TextBlock Classes="label" Text="{l:Tr connect.name}" VerticalAlignment="Center" Margin="0" />
+                                    <TextBox Grid.Column="1" Text="{Binding Selected.Name, FallbackValue=''}"
+                                             PlaceholderText="{l:Tr connect.namePlaceholder}" />
+
+                                    <TextBlock Grid.Row="1" Classes="label" Text="{l:Tr connect.baseUrl}" Margin="0,9,0,0" />
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6">
+                                        <TextBox Classes="mono" Text="{Binding Selected.BaseUrl, FallbackValue=''}"
+                                                 PlaceholderText="https://example.com/scim/v2" />
+                                        <TextBlock Classes="error" Text="{Binding Selected.UrlProblem, FallbackValue={x:Null}}"
+                                                   IsVisible="{Binding Selected.UrlProblem,
+                                                                       Converter={x:Static ObjectConverters.IsNotNull},
+                                                                       FallbackValue=False}" />
+                                        <TextBlock Classes="faint small" TextWrapping="Wrap" Text="{l:Tr connect.urlHint}" />
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="2" Classes="label" Text="{l:Tr connect.token}" Margin="0,9,0,0" />
+                                    <StackPanel Grid.Row="2" Grid.Column="1" Spacing="8">
+                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                                            <TextBox Classes="mono" PasswordChar="•" RevealPassword="{Binding #Reveal.IsChecked}"
+                                                     Text="{Binding Selected.Token, FallbackValue=''}"
+                                                     PlaceholderText="{l:Tr connect.tokenPlaceholder}" />
+                                            <ToggleButton Name="Reveal" Grid.Column="1" Classes="subtle icon" Height="34" Width="34"
+                                                          ToolTip.Tip="{l:Tr connect.reveal}">
+                                                <c:Icon Data="{x:Static c:Icons.Eye}" />
+                                            </ToggleButton>
+                                        </Grid>
+                                        <CheckBox IsChecked="{Binding Selected.RememberToken, FallbackValue=False}">
+                                            <TextBlock Text="{Binding Preferences.RememberLabel}" TextWrapping="Wrap" />
+                                        </CheckBox>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="3" Classes="label" Text="{l:Tr connect.dialect}" Margin="0,9,0,0" />
+                                    <StackPanel Grid.Row="3" Grid.Column="1" Spacing="6">
+                                        <ComboBox ItemsSource="{Binding Selected.Dialects, FallbackValue={x:Null}}"
+                                                  SelectedItem="{Binding Selected.Dialect, FallbackValue={x:Null}}" MinWidth="260">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:DialectOption">
+                                                    <TextBlock Text="{Binding Name}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                        <TextBlock Classes="muted small" TextWrapping="Wrap"
+                                                   Text="{Binding Selected.Dialect.About, FallbackValue=''}" />
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="4" Classes="label" Text="{l:Tr connect.advanced}" Margin="0,9,0,0" />
+                                    <StackPanel Grid.Row="4" Grid.Column="1" Spacing="10">
+                                        <CheckBox IsChecked="{Binding Selected.AcceptInvalidCertificates, FallbackValue=False}"
+                                                  Content="{l:Tr connect.acceptInvalid}" />
+                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                            <TextBlock Classes="muted" Text="{l:Tr connect.timeout}" VerticalAlignment="Center" />
+                                            <NumericUpDown Value="{Binding Selected.TimeoutSeconds, FallbackValue=30}" Minimum="1" Maximum="600"
+                                                           Increment="5" FormatString="0" Width="120" />
+                                            <TextBlock Classes="muted" Text="s" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Border Classes="hairline" />
+
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+                                    <Button Classes="subtle danger" Command="{Binding DeleteProfileCommand}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <c:Icon Data="{x:Static c:Icons.Trash}" Width="14" Height="14" />
+                                            <TextBlock Text="{l:Tr common.delete}" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Grid.Column="2" Command="{Binding TestCommand}" Content="{l:Tr connect.test}" />
+                                    <Button Grid.Column="3" Classes="primary" Command="{Binding ConnectCommand}" IsDefault="True">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <TextBlock Text="{l:Tr connect.connect}" />
+                                            <c:Icon Data="{x:Static c:Icons.ChevronRight}" Width="14" Height="14" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+
+                                <!-- What the last test found. -->
+                                <Border Classes="well" IsVisible="{Binding Probe, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                    <StackPanel Spacing="10" DataContext="{Binding Probe}" x:DataType="vm:ProbeResultViewModel">
+                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                            <Panel VerticalAlignment="Top" Margin="0,1,0,0">
+                                                <c:Icon Data="{x:Static c:Icons.Check}" Foreground="{DynamicResource SuccessBrush}"
+                                                        IsVisible="{Binding Succeeded}" />
+                                                <c:Icon Data="{x:Static c:Icons.Alert}" Foreground="{DynamicResource WarningBrush}"
+                                                        IsVisible="{Binding Partial}" />
+                                                <c:Icon Data="{x:Static c:Icons.Alert}" Foreground="{DynamicResource DangerBrush}"
+                                                        IsVisible="{Binding Failed}" />
+                                            </Panel>
+                                            <StackPanel Grid.Column="1" Spacing="2">
+                                                <TextBlock Classes="strong" Text="{Binding Headline}" TextWrapping="Wrap" />
+                                                <TextBlock Classes="muted small" Text="{Binding Counts}"
+                                                           IsVisible="{Binding Counts, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <ItemsControl ItemsSource="{Binding Problems}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <SelectableTextBlock Classes="small" Foreground="{DynamicResource DangerBrush}"
+                                                                         Text="{Binding}" TextWrapping="Wrap" Margin="26,2,0,2" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <ItemsControl ItemsSource="{Binding Capabilities}" Margin="26,0,0,0">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel ItemSpacing="6" LineSpacing="6" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:CapabilityViewModel">
+                                                    <c:Capability Label="{Binding Name}" Supported="{Binding Supported}" Detail="{Binding Detail}" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

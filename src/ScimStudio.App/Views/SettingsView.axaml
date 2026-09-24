@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ScimStudio.App.ViewModels"
+             xmlns:l="using:ScimStudio.App.Localization"
+             x:Class="ScimStudio.App.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="28,24,28,32" Spacing="18" MaxWidth="760" HorizontalAlignment="Left">
+            <TextBlock Classes="title" Text="{l:Tr settings.title}" />
+
+            <Border Classes="card">
+                <StackPanel Spacing="16">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="24">
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="strong" Text="{l:Tr settings.language}" />
+                            <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr settings.languageHint}" />
+                        </StackPanel>
+                        <ListBox Grid.Column="1" Classes="segmented" ItemsSource="{Binding Languages}" SelectedItem="{Binding Language}"
+                                 VerticalAlignment="Center">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ChoiceViewModel">
+                                    <TextBlock Text="{Binding Label}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                    <Border Classes="hairline" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="24">
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="strong" Text="{l:Tr settings.theme}" />
+                            <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr settings.themeHint}" />
+                        </StackPanel>
+                        <ListBox Grid.Column="1" Classes="segmented" ItemsSource="{Binding Themes}" SelectedItem="{Binding Theme}"
+                                 VerticalAlignment="Center">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ChoiceViewModel">
+                                    <TextBlock Text="{Binding Label}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="eyebrow" Text="{l:Tr settings.about}" />
+                    <Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+                        <TextBlock Classes="muted" Text="{l:Tr settings.version}" />
+                        <TextBlock Grid.Column="1" Classes="mono" Text="{Binding Version}" />
+                        <TextBlock Grid.Row="1" Classes="muted" Text="{l:Tr settings.file}" />
+                        <SelectableTextBlock Grid.Row="1" Grid.Column="1" Classes="mono" Text="{Binding SettingsPath}" TextWrapping="Wrap" />
+                        <TextBlock Grid.Row="2" Classes="muted" Text="{l:Tr settings.tokens}" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TokenStorage}" TextWrapping="Wrap" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

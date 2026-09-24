@@ -1,0 +1,95 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ScimStudio.App.ViewModels"
+             xmlns:c="using:ScimStudio.App.Controls"
+             xmlns:l="using:ScimStudio.App.Localization"
+             x:Class="ScimStudio.App.Views.GeneratorView"
+             x:DataType="vm:GeneratorViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="28,24,28,32" Spacing="18" MaxWidth="920" HorizontalAlignment="Left">
+
+            <StackPanel Spacing="4">
+                <TextBlock Classes="title" Text="{l:Tr generator.title}" />
+                <TextBlock Classes="muted" TextWrapping="Wrap" Text="{l:Tr generator.about}" />
+            </StackPanel>
+
+            <Border Classes="card">
+                <StackPanel Spacing="18">
+                    <TextBlock Classes="eyebrow" Text="{l:Tr generator.what}" />
+                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="16">
+                        <StackPanel>
+                            <TextBlock Classes="label" Text="{l:Tr generator.users}" />
+                            <NumericUpDown Value="{Binding Users}" Minimum="0" Maximum="10000" Increment="5" FormatString="0" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Classes="label" Text="{l:Tr generator.groups}" />
+                            <NumericUpDown Value="{Binding Groups}" Minimum="0" Maximum="500" Increment="1" FormatString="0" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Classes="label" Text="{l:Tr generator.members}" />
+                            <NumericUpDown Value="{Binding MembersPerGroup}" Minimum="0" Maximum="1000" Increment="1" FormatString="0" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1">
+                            <TextBlock Classes="label" Text="{l:Tr generator.inactive}" />
+                            <NumericUpDown Value="{Binding InactivePercent}" Minimum="0" Maximum="100" Increment="5" FormatString="0" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1">
+                            <TextBlock Classes="label" Text="{l:Tr generator.domain}" />
+                            <TextBox Classes="mono" Text="{Binding Domain}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="2">
+                            <TextBlock Classes="label" Text="{l:Tr generator.parallelism}" />
+                            <NumericUpDown Value="{Binding Parallelism}" Minimum="1" Maximum="32" Increment="1" FormatString="0" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Classes="well">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <c:Icon Data="{x:Static c:Icons.Info}" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Top" />
+                            <TextBlock Grid.Column="1" Classes="muted small" TextWrapping="Wrap" Text="{Binding DialectNote}" />
+                        </Grid>
+                    </Border>
+
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Classes="primary" Command="{Binding GenerateCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <c:Icon Data="{x:Static c:Icons.Sparkles}" Width="14" Height="14" />
+                                <TextBlock Text="{l:Tr generator.generate}" />
+                            </StackPanel>
+                        </Button>
+                        <Button Classes="subtle danger" Command="{Binding RemoveCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <c:Icon Data="{x:Static c:Icons.Trash}" Width="14" Height="14" />
+                                <TextBlock Text="{l:Tr generator.remove}" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding CancelCommand}" IsVisible="{Binding IsRunning}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <c:Icon Data="{x:Static c:Icons.Stop}" Width="14" Height="14" />
+                                <TextBlock Text="{l:Tr common.cancel}" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card" IsVisible="{Binding HasOutcome}">
+                <StackPanel Spacing="10">
+                    <TextBlock Classes="eyebrow" Text="{l:Tr generator.outcome}" />
+                    <ProgressBar Value="{Binding Progress}" Maximum="1" />
+                    <TextBlock Classes="muted small" Text="{Binding ProgressText}" />
+                    <TextBlock Text="{Binding Report}" TextWrapping="Wrap" />
+                    <ItemsControl ItemsSource="{Binding Problems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <SelectableTextBlock Classes="small" Foreground="{DynamicResource DangerBrush}" Text="{Binding}"
+                                                     TextWrapping="Wrap" Margin="0,2" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
